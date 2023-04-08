@@ -1,0 +1,19 @@
+mod media {
+    pub mod attachment;
+    pub mod emoji;
+}
+
+pub mod channels {
+    pub mod channel;
+    pub mod channel_invite;
+    pub mod channel_unread;
+    pub mod message;
+}
+
+pub mod users {
+    pub mod user;
+}
+
+pub mod server {
+    pub mod server_member;
+}

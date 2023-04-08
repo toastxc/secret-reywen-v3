@@ -8,6 +8,8 @@ mod servers {
     pub mod member_fetch;
     pub mod member_fetch_all;
     pub mod member_remove;
+    pub mod permissions_set;
+    pub mod permissions_set_default;
 }
 pub use servers::*;
 

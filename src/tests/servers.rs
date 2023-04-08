@@ -7,7 +7,7 @@ mod tests {
     use crate::{
         methods::{
             ban_create::DataBanReason, channel_create::DataChannelCreate,
-            member_edit::DataMemberEdit, *,
+            member_edit::DataMemberEdit, permissions_set_default::DataPermissionSet, *,
         },
         tests::common::tester,
     };
@@ -76,6 +76,17 @@ mod tests {
 
         if let Err(curl) = channel_create::channel_create(&http, server, create_chan).await {
             panic!("{:#?}", curl);
+        }
+    }
+
+    #[tokio::test]
+    async fn test_permission_set_default() {
+        let http = tester().await;
+        let data = DataPermissionSet::new(0);
+        if let Err(error) =
+            permissions_set_default::permissions_set_default(&http, server, data).await
+        {
+            panic!("{:#?}", error);
         }
     }
 }

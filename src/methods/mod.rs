@@ -1,4 +1,4 @@
-pub mod servers {
+mod servers {
     pub mod ban_create;
     pub mod ban_list;
     pub mod ban_remove;

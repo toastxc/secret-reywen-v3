@@ -21,7 +21,7 @@ pub async fn member_edit(
 pub struct DataMemberEdit {
     pub nickname: Option<String>,
     pub avatar: Option<String>,
-    pub roles: Vec<String>,
+    pub roles: Option<Vec<String>>,
     pub timeout: Option<String>,
     pub remove: Option<Vec<String>>,
 }

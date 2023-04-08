@@ -5,7 +5,7 @@ use crate::{
     structures::{server::server_member::Member, users::user::User},
 };
 
-pub async fn member_fetch_all(http: &Delta, server: &str) -> Result<AllMemberResponse, DeltaError> {
+pub async fn main(http: &Delta, server: &str) -> Result<AllMemberResponse, DeltaError> {
     result(http.get(&format!("/servers/{server}/members")).await).await
 }
 

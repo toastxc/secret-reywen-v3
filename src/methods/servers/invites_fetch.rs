@@ -1,7 +1,7 @@
 use crate::methods::driver::{result, Delta, DeltaError};
 use serde::{Deserialize, Serialize};
 
-pub async fn invite_fetch(http: &Delta, server: &str) -> Result<Vec<DataInvite>, DeltaError> {
+pub async fn main(http: &Delta, server: &str) -> Result<Vec<DataInvite>, DeltaError> {
     result(http.get(&format!("/servers/{server}/invites")).await).await
 }
 

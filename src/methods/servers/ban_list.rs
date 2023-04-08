@@ -1,6 +1,6 @@
 use crate::methods::driver::{result, Delta, DeltaError};
 
-pub async fn ban_list(http: &Delta, server: &str) -> Result<DataBanList, DeltaError> {
+pub async fn main(http: &Delta, server: &str) -> Result<DataBanList, DeltaError> {
     result(http.get(&format!("/servers/{server}/bans")).await).await
 }
 

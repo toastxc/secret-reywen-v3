@@ -5,7 +5,7 @@ use crate::{
     structures::{server::server_member::Member, users::user::User},
 };
 
-pub async fn member_remove(http: &Delta, server: &str, member: &str) -> Result<(), DeltaError> {
+pub async fn main(http: &Delta, server: &str, member: &str) -> Result<(), DeltaError> {
     result(
         http.delete(&format!("/servers/{server}/members/{member}"), None)
             .await,

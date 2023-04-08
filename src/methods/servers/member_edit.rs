@@ -1,7 +1,7 @@
 use crate::methods::driver::{result, Delta, DeltaError};
 use serde::{Deserialize, Serialize};
 
-pub async fn channel_create(
+pub async fn main(
     http: &Delta,
     server: &str,
     member: &str,

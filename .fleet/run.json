@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "type": "cargo",
+            "name": "run",
+            "cargoArgs": ["run"],
+        },
+        {
+            "type": "cargo",
+            "name": "test",
+            "cargoArgs": ["test"],
+            
+        },
+{
+    "type": "cargo",
+    "name": "build",
+    "cargoArgs": ["b"],
+},
+        
+        
+    ]
+}

@@ -1,0 +1,9 @@
+{
+    "[rust]": {
+        "rust-analyzer.cargo.features": [
+            "check-internal-tests"
+        ]
+        
+    },
+    
+}

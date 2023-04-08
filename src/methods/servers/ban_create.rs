@@ -5,7 +5,8 @@ use serde::{Deserialize, Serialize};
 pub struct DataBanReason {
     pub reason: Option<String>,
 }
-pub async fn main(
+
+pub async fn ban_create(
     http: &Delta,
     server: &str,
     user: &str,

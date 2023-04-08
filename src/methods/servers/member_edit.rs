@@ -1,7 +1,7 @@
 use crate::methods::driver::{result, Delta, DeltaError};
 use serde::{Deserialize, Serialize};
 
-pub async fn main(
+pub async fn member_edit(
     http: &Delta,
     server: &str,
     member: &str,

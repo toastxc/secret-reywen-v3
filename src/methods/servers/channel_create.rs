@@ -4,7 +4,7 @@ use crate::{
 };
 use serde::{Deserialize, Serialize};
 
-pub async fn main(
+pub async fn channel_create(
     http: &Delta,
     server: &str,
     data: DataChannelCreate,

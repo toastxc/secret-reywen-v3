@@ -13,6 +13,11 @@ mod servers {
     pub mod roles_create;
     pub mod roles_delete;
     pub mod roles_edit;
+    pub mod server_ack;
+    pub mod server_create;
+    pub mod server_delete;
+    pub mod server_edit;
+    pub mod server_fetch;
 }
 pub use servers::*;
 

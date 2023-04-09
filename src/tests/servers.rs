@@ -7,11 +7,11 @@ mod tests {
     use crate::{
         methods::{
             ban_create::DataBanReason, channel_create::DataChannelCreate,
-            member_edit::DataMemberEdit, permissions_set::DataPermissionSet,
-            permissions_set_default::DataPermissionSetDefault, roles_create::DataRoleCreate,
-            roles_edit::DataEditRole, server_create::DataCreateServer, server_edit::DataEditServer,
-            *,
+            member_edit::DataMemberEdit, permissions_set_default::DataPermissionSetDefault,
+            roles_create::DataRoleCreate, roles_edit::DataEditRole,
+            server_create::DataCreateServer, server_edit::DataEditServer, *,
         },
+        structures::permissions::{calculator::Permissions, definitions::Permission},
         tests::common::tester,
     };
 
@@ -109,15 +109,17 @@ mod tests {
             panic!("{:#?}", error);
         }
     }
-
-    // todo this doesnt work
     #[tokio::test]
     async fn test_permission_set() {
         let http = tester().await;
 
-        let data = DataPermissionSet::default();
+        let perms = Permissions::default()
+            .add_allow(Permission::ViewChannel)
+            .add_allow(Permission::KickMembers);
 
-        if let Err(error) = permissions_set::permissions_set(&http, SERVER, ROLE, data).await {
+        if let Err(error) =
+            permissions_set::permissions_set(&http, SERVER, ROLE, perms.export()).await
+        {
             panic!("{:#?}", error);
         }
     }

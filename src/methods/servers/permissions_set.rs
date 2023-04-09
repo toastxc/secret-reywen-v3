@@ -1,8 +1,6 @@
-use serde::{Deserialize, Serialize};
-
 use crate::{
     methods::driver::{result, Delta, DeltaError},
-    structures::server::server::Server,
+    structures::{permissions::calculator::DataPermissionSet, server::server::Server},
 };
 
 pub async fn permissions_set(
@@ -19,14 +17,4 @@ pub async fn permissions_set(
         .await,
     )
     .await
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, Default)]
-pub struct DataPermissionSet {
-    pub permissions: DataPermissions,
-}
-#[derive(Debug, Clone, Serialize, Deserialize, Default)]
-pub struct DataPermissions {
-    pub allow: u32,
-    pub deny: u32,
 }

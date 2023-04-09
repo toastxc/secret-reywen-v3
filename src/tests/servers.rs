@@ -81,7 +81,6 @@ mod tests {
         }
     }
 
-    // todo this does not work
     #[tokio::test]
     async fn test_permission_set_default() {
         let http = tester().await;

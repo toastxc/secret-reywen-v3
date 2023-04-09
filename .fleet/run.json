@@ -16,6 +16,11 @@
     "name": "build",
     "cargoArgs": ["b"],
 },
+        {
+            "type": "cargo",
+            "name": "format",
+            "cargoArgs": ["fmt"],
+        },
         
         
     ]

@@ -121,8 +121,9 @@ pub async fn common(
 
 #[derive(Debug)]
 pub enum DeltaError {
-    HTTP(reqwest::StatusCode),
+    HTTP(reqwest::StatusCode, String),
     REQWEST(reqwest::Error),
+    SERDE(reqwest::Error),
 }
 
 pub async fn result<T: serde::de::DeserializeOwned>(
@@ -135,7 +136,10 @@ pub async fn result<T: serde::de::DeserializeOwned>(
         }
         Ok(a) => {
             if !a.status().is_success() {
-                return Err(DeltaError::HTTP(a.status()));
+                return Err(DeltaError::HTTP(
+                    a.status(),
+                    a.text().await.unwrap_or_default(),
+                ));
             }
             if a.status() == 204 {
                 return Ok(serde_json::from_value(serde_json::Value::Null).unwrap());
@@ -143,7 +147,7 @@ pub async fn result<T: serde::de::DeserializeOwned>(
 
             match a.json().await {
                 Ok(a) => a,
-                Err(a) => return Err(DeltaError::REQWEST(a)),
+                Err(a) => return Err(DeltaError::SERDE(a)),
             }
         }
     };

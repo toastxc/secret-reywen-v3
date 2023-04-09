@@ -10,6 +10,9 @@ mod servers {
     pub mod member_remove;
     pub mod permissions_set;
     pub mod permissions_set_default;
+    pub mod roles_create;
+    pub mod roles_delete;
+    pub mod roles_edit;
 }
 pub use servers::*;
 

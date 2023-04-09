@@ -8,7 +8,7 @@ use crate::{
 pub async fn permissions_set_default(
     http: &Delta,
     server: &str,
-    data: DataPermissionSet,
+    data: DataPermissionSetDefault,
 ) -> Result<Server, DeltaError> {
     result(
         http.put(
@@ -21,11 +21,11 @@ pub async fn permissions_set_default(
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
-pub struct DataPermissionSet {
+pub struct DataPermissionSetDefault {
     pub permissions: u64,
 }
 
-impl DataPermissionSet {
+impl DataPermissionSetDefault {
     pub fn new(permissions: u64) -> Self {
         Self { permissions }
     }

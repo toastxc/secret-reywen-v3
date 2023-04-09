@@ -1,13 +1,19 @@
-const server: &str = "01GKWVWGHN242DVWG4BKXG2C7F";
-const user: &str = "01GXF9E5H7K6BSJ6Q9QGWYRVWD";
-
+pub const SERVER: &str = "01GKWVWGHN242DVWG4BKXG2C7F";
+pub const USER: &str = "01GXF9E5H7K6BSJ6Q9QGWYRVWD";
+pub const ROLE: &str = "01GXFR9FPEPFY188X5MKV2E8ZN";
 #[cfg(test)]
 mod tests {
 
     use crate::{
         methods::{
-            ban_create::DataBanReason, channel_create::DataChannelCreate,
-            member_edit::DataMemberEdit, permissions_set_default::DataPermissionSet, *,
+            ban_create::DataBanReason,
+            channel_create::DataChannelCreate,
+            member_edit::DataMemberEdit,
+            permissions_set::{DataPermissionSet, DataPermissions},
+            permissions_set_default::DataPermissionSetDefault,
+            roles_create::DataRoleCreate,
+            roles_edit::DataEditRole,
+            *,
         },
         tests::common::tester,
     };
@@ -20,7 +26,7 @@ mod tests {
 
         let data = DataMemberEdit::default();
 
-        if let Err(curl) = member_edit::member_edit(&http, server, user, data).await {
+        if let Err(curl) = member_edit::member_edit(&http, SERVER, USER, data).await {
             panic!("{:#?}", curl);
         }
     }
@@ -29,7 +35,7 @@ mod tests {
     async fn test_member_fetch() {
         let http = tester().await;
 
-        if let Err(curl) = member_fetch::member_fetch(&http, server, user).await {
+        if let Err(curl) = member_fetch::member_fetch(&http, SERVER, USER).await {
             panic!("{:#?}", curl);
         }
     }
@@ -37,7 +43,7 @@ mod tests {
     async fn test_member_fetch_all() {
         let http = tester().await;
 
-        if let Err(curl) = member_fetch_all::member_fetch_all(&http, server).await {
+        if let Err(curl) = member_fetch_all::member_fetch_all(&http, SERVER).await {
             panic!("{:#?}", curl);
         }
     }
@@ -50,11 +56,11 @@ mod tests {
         let banreason = DataBanReason {
             reason: Some(String::from("bot test")),
         };
-        if let Err(curl) = ban_create::ban_create(&http, server, user, banreason).await {
+        if let Err(curl) = ban_create::ban_create(&http, SERVER, USER, banreason).await {
             panic!("ban user {:#?}", curl);
         }
 
-        if let Err(curl) = ban_remove::ban_remove(&http, server, user).await {
+        if let Err(curl) = ban_remove::ban_remove(&http, SERVER, USER).await {
             panic!("remove banned user {:#?}", curl);
         }
     }
@@ -63,8 +69,7 @@ mod tests {
     async fn test_ban_list() {
         let http = tester().await;
 
-        // list banned users
-        if let Err(curl) = ban_list::ban_list(&http, server).await {
+        if let Err(curl) = ban_list::ban_list(&http, SERVER).await {
             panic!("list banned users {:#?}", curl);
         }
     }
@@ -74,19 +79,105 @@ mod tests {
 
         let create_chan = DataChannelCreate::new("womp");
 
-        if let Err(curl) = channel_create::channel_create(&http, server, create_chan).await {
+        if let Err(curl) = channel_create::channel_create(&http, SERVER, create_chan).await {
             panic!("{:#?}", curl);
         }
     }
 
+    // todo this does not work
     #[tokio::test]
     async fn test_permission_set_default() {
         let http = tester().await;
-        let data = DataPermissionSet::new(0);
+        let data = DataPermissionSetDefault::new(0);
         if let Err(error) =
-            permissions_set_default::permissions_set_default(&http, server, data).await
+            permissions_set_default::permissions_set_default(&http, SERVER, data).await
         {
             panic!("{:#?}", error);
         }
     }
+
+    #[tokio::test]
+    async fn test_fetch_invites() {
+        let http = tester().await;
+
+        if let Err(error) = invites_fetch::invites_fetch(&http, SERVER).await {
+            panic!("{:#?}", error);
+        }
+    }
+
+    // todo this doesnt work
+    #[tokio::test]
+    async fn test_permission_set() {
+        let http = tester().await;
+
+        let data = DataPermissionSet::default();
+
+        if let Err(error) = permissions_set::permissions_set(&http, SERVER, ROLE, data).await {
+            panic!("{:#?}", error);
+        }
+    }
+
+    #[tokio::test]
+    async fn test_role_create() {
+        let http = tester().await;
+
+        let data = DataRoleCreate::new("dummyrole");
+
+        if let Err(error) = roles_create::roles_create(&http, SERVER, data).await {
+            panic!("{:#?}", error);
+        }
+    }
+
+    #[tokio::test]
+    async fn test_role_delete() {
+        let http = tester().await;
+
+        if let Err(error) =
+            roles_delete::roles_delete(&http, SERVER, "01GXG24BV8QMSFWXKFRHZV30AY").await
+        {
+            panic!("{:#?}", error);
+        }
+    }
+
+    #[tokio::test]
+    async fn test_roles_edit() {
+        let http = tester().await;
+
+        let data = DataEditRole::new();
+
+        if let Err(error) = roles_edit::roles_edit(&http, SERVER, ROLE, data).await {
+            panic!("{:#?}", error);
+        }
+    }
 }
+
+// DO NOT REMOVE - TEMPLATE
+//
+//
+//
+//
+//
+//
+//
+// TEMPLATE
+/*
+
+
+
+
+ #[tokio::test]
+    async fn test_template() {
+        let http = tester().await;
+
+        if let Err(error) =
+            template::template(&http, SERVER).await
+        {
+            panic!("{:#?}", error);
+        }
+    }
+
+
+
+
+
+*/

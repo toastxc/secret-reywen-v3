@@ -15,6 +15,6 @@ pub mod users {
 }
 
 pub mod server {
-    pub mod server_member;
     pub mod server;
+    pub mod server_member;
 }

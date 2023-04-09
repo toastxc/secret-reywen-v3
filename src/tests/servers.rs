@@ -29,6 +29,15 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn test_member_remove() {
+        let http = tester().await;
+
+        if let Err(curl) = member_remove::member_remove(&http, SERVER, USER).await {
+            panic!("{:#?}", curl);
+        }
+    }
+
+    #[tokio::test]
     async fn test_member_fetch() {
         let http = tester().await;
 

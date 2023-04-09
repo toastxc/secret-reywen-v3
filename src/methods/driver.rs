@@ -1,5 +1,7 @@
 use reqwest::Response;
+use serde::{Deserialize, Serialize};
 
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Delta {
     pub url: String,
     pub token: String,
@@ -7,7 +9,7 @@ pub struct Delta {
     pub auth: Auth,
 }
 
-#[derive(Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Auth {
     usertype: String,
     token: String,

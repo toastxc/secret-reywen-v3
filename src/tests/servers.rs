@@ -6,13 +6,10 @@ mod tests {
 
     use crate::{
         methods::{
-            ban_create::DataBanReason,
-            channel_create::DataChannelCreate,
-            member_edit::DataMemberEdit,
-            permissions_set::{DataPermissionSet, DataPermissions},
-            permissions_set_default::DataPermissionSetDefault,
-            roles_create::DataRoleCreate,
-            roles_edit::DataEditRole,
+            ban_create::DataBanReason, channel_create::DataChannelCreate,
+            member_edit::DataMemberEdit, permissions_set::DataPermissionSet,
+            permissions_set_default::DataPermissionSetDefault, roles_create::DataRoleCreate,
+            roles_edit::DataEditRole, server_create::DataCreateServer, server_edit::DataEditServer,
             *,
         },
         tests::common::tester,
@@ -146,6 +143,56 @@ mod tests {
         let data = DataEditRole::new();
 
         if let Err(error) = roles_edit::roles_edit(&http, SERVER, ROLE, data).await {
+            panic!("{:#?}", error);
+        }
+    }
+
+    // todo unresolved issue
+    #[tokio::test]
+    async fn test_server_create() {
+        let http = tester().await;
+
+        let data = DataCreateServer::new("DummyServer");
+
+        if let Err(error) = server_create::server_create(&http, data).await {
+            panic!("{:#?}", error);
+        }
+    }
+
+    #[tokio::test]
+    async fn test_server_edit() {
+        let http = tester().await;
+        let data = DataEditServer::new();
+
+        if let Err(error) = server_edit::server_edit(&http, SERVER, data).await {
+            panic!("{:#?}", error);
+        }
+    }
+
+    #[tokio::test]
+    async fn test_server_fetch() {
+        let http = tester().await;
+
+        if let Err(error) = server_fetch::server_fetch(&http, SERVER).await {
+            panic!("{:#?}", error);
+        }
+    }
+
+    // todo untested
+    #[tokio::test]
+    async fn test_server_ack() {
+        let http = tester().await;
+
+        if let Err(error) = server_ack::server_ack(&http, SERVER).await {
+            panic!("{:#?}", error);
+        }
+    }
+
+    #[tokio::test]
+    async fn test_server_delete() {
+        let http = tester().await;
+
+        if let Err(error) = server_delete::server_delete(&http, SERVER).await {
             panic!("{:#?}", error);
         }
     }

@@ -18,3 +18,8 @@ pub mod server {
     pub mod server;
     pub mod server_member;
 }
+
+pub mod permissions {
+    pub mod calculator;
+    pub mod definitions;
+}

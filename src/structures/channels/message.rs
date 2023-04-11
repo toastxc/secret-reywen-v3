@@ -1,5 +1,7 @@
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
+use crate::structures::users::user::User;
+use crate::structures::server::server_member::Member;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Message {
@@ -61,6 +63,20 @@ pub struct Embed {
     pub colour: String,
 }
 
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct SendableEmbed {
+    /// Lenght min: 1, max: 128
+    pub icon_url: Option<String>,
+    pub url: Option<String>,
+    /// Length min: 1, max: 100
+    pub title: Option<String>,
+    /// Length min: 1, max: 2000
+    pub description: Option<String>,
+    pub media: Option<String>,
+    /// Length min: 1, max: 128
+    pub colour: Option<String>,
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Special {
     pub r#type: String,
@@ -92,4 +108,33 @@ pub struct Masquerade {
     pub name: String,
     pub avatar: String,
     pub colour: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum BulkMessageResponse {
+    JustMessages(
+        /// List of messages
+        Vec<Message>,
+    ),
+    MessagesAndUsers {
+        /// List of messages
+        messages: Vec<Message>,
+        /// List of users
+        users: Vec<User>,
+        /// List of members
+        #[serde(skip_serializing_if = "Option::is_none")]
+        members: Option<Vec<Member>>,
+    },
+}
+#[derive(Serialize, Deserialize, Debug, Default)]
+#[cfg_attr(feature = "rocket_impl", derive(FromFormField))]
+pub enum MessageSort {
+    /// Sort by the most relevant messages
+    #[default]
+    Relevance,
+    /// Sort by the newest messages first
+    Latest,
+    /// Sort by the oldest messages first
+    Oldest,
 }

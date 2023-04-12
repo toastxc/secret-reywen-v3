@@ -21,6 +21,14 @@ pub struct Message {
     pub masquerade: Masquerade,
 }
 
+#[derive(Debug, Serialize, Clone, Deserialize)]
+pub struct Reply {
+    /// Message Id
+    pub id: String,
+    /// Whether this reply should mention the message's author
+    pub mention: bool,
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct System {
     pub r#type: String,
@@ -97,13 +105,13 @@ pub struct Video {
     pub height: i64,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Clone, Deserialize)]
 pub struct Interactions {
     pub reactions: Vec<String>,
     pub restrict_reactions: bool,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Clone, Deserialize)]
 pub struct Masquerade {
     pub name: String,
     pub avatar: String,
@@ -127,7 +135,7 @@ pub enum BulkMessageResponse {
         members: Option<Vec<Member>>,
     },
 }
-#[derive(Serialize, Deserialize, Debug, Default)]
+#[derive(Serialize, Deserialize, Clone, Debug, Default)]
 #[cfg_attr(feature = "rocket_impl", derive(FromFormField))]
 pub enum MessageSort {
     /// Sort by the most relevant messages

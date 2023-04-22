@@ -26,3 +26,15 @@ pub struct DataEditMessage {
     /// Embeds to include in the message (length min: 0, length max: 10)
     embeds: Option<Vec<SendableEmbed>>,
 }
+impl DataEditMessage {
+    pub fn new() -> Self {
+        Self {
+            ..Default::default()
+        }
+    }
+
+    pub fn content(&mut self, content: &str) -> Self {
+        self.content = Some(String::from(content));
+        self.to_owned()
+    }
+}

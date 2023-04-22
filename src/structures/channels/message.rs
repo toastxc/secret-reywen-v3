@@ -6,19 +6,19 @@ use serde_json::Value;
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Message {
     pub _id: String,
-    pub nonce: String,
+    pub nonce: Option<String>,
     pub channel: String,
     pub author: String,
-    pub content: String,
-    pub system: System,
-    pub attachments: Vec<Attachment>,
-    pub edited: String,
-    pub embeds: Vec<Embed>,
-    pub mentions: Vec<String>,
-    pub replies: Vec<String>,
-    pub reactions: Value,
-    pub interactions: Interactions,
-    pub masquerade: Masquerade,
+    pub content: Option<String>,
+    pub system: Option<System>,
+    pub attachments: Option<Vec<Attachment>>,
+    pub edited: Option<String>,
+    pub embeds: Option<Vec<Embed>>,
+    pub mentions: Option<Vec<String>>,
+    pub replies: Option<Vec<String>>,
+    pub reactions: Option<Value>,
+    pub interactions: Option<Interactions>,
+    pub masquerade: Option<Masquerade>,
 }
 
 #[derive(Debug, Serialize, Clone, Deserialize)]

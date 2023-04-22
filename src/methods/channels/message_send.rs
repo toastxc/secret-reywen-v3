@@ -1,10 +1,20 @@
 use crate::methods::driver::{result, Delta, DeltaError};
-use crate::structures::channels::message::{Message, SendableEmbed, Reply, Masquerade, Interactions};
+use crate::structures::channels::message::{
+    Interactions, Masquerade, Message, Reply, SendableEmbed,
+};
 use serde::{Deserialize, Serialize};
 
-pub async fn message_send(http: &Delta, channel: &str, message: &DataMessageSend) -> Result<Message, DeltaError> {
+pub async fn message_send(
+    http: &Delta,
+    channel: &str,
+    message: &DataMessageSend,
+) -> Result<Message, DeltaError> {
     let data = serde_json::to_string(message).unwrap();
-    result(http.post(&format!("/channels/{channel}/messages"), Some(&data)).await).await
+    result(
+        http.post(&format!("/channels/{channel}/messages"), Some(&data))
+            .await,
+    )
+    .await
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]

@@ -2,9 +2,17 @@ use crate::methods::driver::{result, Delta, DeltaError};
 use crate::structures::channels::message::{BulkMessageResponse, MessageSort};
 use serde::{Deserialize, Serialize};
 
-pub async fn message_search(http: &Delta, channel: &str, search_options: &OptionsMessageSearch) -> Result<BulkMessageResponse, DeltaError> {
+pub async fn message_search(
+    http: &Delta,
+    channel: &str,
+    search_options: &OptionsMessageSearch,
+) -> Result<BulkMessageResponse, DeltaError> {
     let data = serde_json::to_string(search_options).unwrap();
-    result(http.post(&format!("/channels/{channel}/search"), Some(&data)).await).await
+    result(
+        http.post(&format!("/channels/{channel}/search"), Some(&data))
+            .await,
+    )
+    .await
 }
 
 /// # Search Parameters

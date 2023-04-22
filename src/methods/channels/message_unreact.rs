@@ -1,6 +1,13 @@
 use crate::methods::driver::{result, Delta, DeltaError};
 
-pub async fn message_send(http: &Delta, channel: &str, message: &str, emoji: &str, user_id: Option<String>, remove_all: Option<bool>) -> Result<(), DeltaError> {
+pub async fn message_send(
+    http: &Delta,
+    channel: &str,
+    message: &str,
+    emoji: &str,
+    user_id: Option<String>,
+    remove_all: Option<bool>,
+) -> Result<(), DeltaError> {
     let mut url = format!("/channels/{channel}/messages/{message}/reactions/{emoji}").to_owned();
     let mut params = "".to_owned();
     if user_id != None {

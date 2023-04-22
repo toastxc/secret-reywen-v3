@@ -1,7 +1,7 @@
+use crate::structures::server::server_member::Member;
+use crate::structures::users::user::User;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
-use crate::structures::users::user::User;
-use crate::structures::server::server_member::Member;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Message {

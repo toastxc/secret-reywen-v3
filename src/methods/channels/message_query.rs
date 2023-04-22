@@ -1,13 +1,21 @@
 use crate::methods::driver::{result, Delta, DeltaError};
 use crate::structures::channels::message::{BulkMessageResponse, MessageSort};
-use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 
-pub async fn message_fetch(http: &Delta, channel: &str, message: &str, query: &OptionsQueryMessages) -> Result<BulkMessageResponse, DeltaError> {
+pub async fn message_fetch(
+    http: &Delta,
+    channel: &str,
+    message: &str,
+    query: &OptionsQueryMessages,
+) -> Result<BulkMessageResponse, DeltaError> {
     let data = serde_json::to_string(query).unwrap();
     let data_map: HashMap<String, String> = serde_json::from_str(&data).unwrap();
     let mut url: String = format!("/channels/{channel}/messages").to_string();
-    let params_vec: Vec<String> = data_map.into_iter().map(|(k, v)| format!("{k}={v}")).collect();
+    let params_vec: Vec<String> = data_map
+        .into_iter()
+        .map(|(k, v)| format!("{k}={v}"))
+        .collect();
     if params_vec.len() > 0 {
         url.push_str("?");
         url.push_str(params_vec.join("&").as_str());

@@ -24,7 +24,6 @@ pub use servers::*;
 pub mod driver;
 
 pub mod channels {
-    pub mod channel_ack;
     pub mod channel_delete;
     pub mod channel_edit;
     pub mod channel_fetch;
@@ -33,6 +32,7 @@ pub mod channels {
     pub mod group_remove_member;
     pub mod invite_create;
     pub mod members_fetch;
+    pub mod message_ack;
     pub mod message_bulk_delete;
     pub mod message_clear_reactions;
     pub mod message_delete;

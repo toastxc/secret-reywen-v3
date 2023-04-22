@@ -1,13 +1,13 @@
 use crate::{
     methods::driver::{result, Delta, DeltaError},
-    structures::{permissions::calculator::DataPermissionSet, server::server::Server},
+    structures::{permissions::exports::ServerPermissions, server::server::Server},
 };
 
 pub async fn permissions_set(
     http: &Delta,
     server: &str,
     role_id: &str,
-    data: DataPermissionSet,
+    data: ServerPermissions,
 ) -> Result<Server, DeltaError> {
     result(
         http.put(

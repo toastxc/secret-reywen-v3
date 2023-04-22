@@ -19,12 +19,6 @@ pub async fn message_send(
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct DataMessageSend {
-    /// Unique token to prevent duplicate message sending
-    ///
-    /// **This is deprecated and replaced by `Idempotency-Key`!**
-    /// length min: 1, max: 64
-    nonce: Option<String>,
-
     /// Message content to send
     /// length min: 0, max: 2000
     content: Option<String>,
@@ -42,4 +36,17 @@ pub struct DataMessageSend {
     masquerade: Option<Masquerade>,
     /// Information about how this message should be interacted with
     interactions: Option<Interactions>,
+}
+
+impl DataMessageSend {
+    pub fn new() -> Self {
+        Self {
+            ..Default::default()
+        }
+    }
+
+    pub fn content(&mut self, content: &str) -> Self {
+        self.content = Some(String::from(content));
+        self.to_owned()
+    }
 }

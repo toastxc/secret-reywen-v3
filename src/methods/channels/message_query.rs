@@ -6,7 +6,6 @@ use std::collections::HashMap;
 pub async fn message_fetch(
     http: &Delta,
     channel: &str,
-    message: &str,
     query: &OptionsQueryMessages,
 ) -> Result<BulkMessageResponse, DeltaError> {
     let data = serde_json::to_string(query).unwrap();

@@ -4,9 +4,9 @@ use serde::Serialize;
 pub fn struct_to_url<T: Serialize>(query: T) -> String {
     let mut iter = Vec::new();
 
-    let json_str = serde_json::to_string(&query).unwrap();
-    let json_obj =
-        serde_json::from_str::<serde_json::Map<String, serde_json::Value>>(&json_str).unwrap();
+    let json_str = serde_json::to_string(&query).unwrap_or_default();
+    let json_obj = serde_json::from_str::<serde_json::Map<String, serde_json::Value>>(&json_str)
+        .unwrap_or_default();
 
     for (key, value) in json_obj {
         // null handling

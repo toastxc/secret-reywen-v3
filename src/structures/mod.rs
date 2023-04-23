@@ -1,6 +1,7 @@
 mod media {
     pub mod attachment;
     pub mod emoji;
+    pub mod embeds;
 }
 
 pub mod channels {

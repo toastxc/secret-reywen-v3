@@ -1,5 +1,3 @@
-use serde::{Deserialize, Serialize};
-
 use crate::{
     methods::driver::{result, Delta, DeltaError},
     structures::{permissions::exports::ServerDefaultPermissions, server::server::Server},

@@ -1,51 +1,84 @@
+use crate::methods::corelib::struct_to_url;
 use crate::methods::driver::{result, Delta, DeltaError};
-use crate::structures::channels::message::{BulkMessageResponse, MessageSort};
-use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
 
-pub async fn message_fetch(
+use crate::structures::channels::message::{
+    BulkMessageResponse, BulkMessageResponse2, MessageSort,
+};
+use serde::{Deserialize, Serialize};
+
+pub async fn message_query(
     http: &Delta,
     channel: &str,
     query: &OptionsQueryMessages,
-) -> Result<BulkMessageResponse, DeltaError> {
-    let data = serde_json::to_string(query).unwrap();
-    let data_map: HashMap<String, String> = serde_json::from_str(&data).unwrap();
-    let mut url: String = format!("/channels/{channel}/messages").to_string();
-    let params_vec: Vec<String> = data_map
-        .into_iter()
-        .map(|(k, v)| format!("{k}={v}"))
-        .collect();
-    if params_vec.len() > 0 {
-        url.push_str("?");
-        url.push_str(params_vec.join("&").as_str());
-    }
-    println!("{:#?}", url);
-    result(http.get(url.as_str()).await).await
+) -> Result<BulkMessageResponse2, DeltaError> {
+    result(
+        http.get(&format!(
+            "/channels/{channel}/messages{}",
+            struct_to_url(query)
+        ))
+        .await,
+    )
+    .await
 }
 
 /// # Query Parameters
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug, Default, Clone)]
 pub struct OptionsQueryMessages {
     /// Maximum number of messages to fetch
     ///
     /// For fetching nearby messages, this is \`(limit + 1)\`.
     /// min: 1, max 100
-    limit: Option<i64>,
+    pub limit: Option<i64>,
     /// Message id before which messages should be fetched
     /// length min: 26, max: 26
-    before: Option<String>,
+    pub before: Option<String>,
     /// Message id after which messages should be fetched
     /// length min: 26, max: 26
-    after: Option<String>,
+    pub after: Option<String>,
     /// Message sort direction
-    sort: Option<MessageSort>,
+    pub sort: Option<MessageSort>,
     /// Message id to search around
     ///
     /// Specifying 'nearby' ignores 'before', 'after' and 'sort'.
     /// It will also take half of limit rounded as the limits to each side.
     /// It also fetches the message ID specified.
     /// length min: 26, max: 26
-    nearby: Option<String>,
+    pub nearby: Option<String>,
     /// Whether to include user (and member, if server channel) objects
-    include_users: Option<bool>,
+    pub include_users: Option<bool>,
+}
+
+impl OptionsQueryMessages {
+    pub fn new() -> Self {
+        Self {
+            ..Default::default()
+        }
+    }
+    pub fn set_limit(&mut self, limit: i64) -> Self {
+        self.limit = Some(limit);
+        self.to_owned()
+    }
+
+    pub fn set_before(&mut self, before: &str) -> Self {
+        self.before = Some(String::from(before));
+        self.to_owned()
+    }
+    pub fn set_after(&mut self, after: &str) -> Self {
+        self.after = Some(String::from(after));
+        self.to_owned()
+    }
+
+    pub fn set_sort(&mut self, sort: MessageSort) -> Self {
+        self.sort = Some(sort);
+        self.to_owned()
+    }
+    pub fn set_nearby(&mut self, nearby: &str) -> Self {
+        self.nearby = Some(String::from(nearby));
+        self.to_owned()
+    }
+
+    pub fn set_include_users(&mut self, include_users: bool) -> Self {
+        self.include_users = Some(include_users);
+        self.to_owned()
+    }
 }

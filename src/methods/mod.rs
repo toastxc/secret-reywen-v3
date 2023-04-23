@@ -21,6 +21,7 @@ mod servers {
 }
 pub use servers::*;
 
+pub mod corelib;
 pub mod driver;
 
 pub mod channels {
@@ -39,7 +40,6 @@ pub mod channels {
     pub mod message_edit;
     pub mod message_fetch;
     pub mod message_query;
-    pub mod message_query_stale;
     pub mod message_react;
     pub mod message_search;
     pub mod message_send;

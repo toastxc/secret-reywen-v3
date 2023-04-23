@@ -3,7 +3,14 @@ use crate::structures::channels::channel::Channel;
 use serde::{Deserialize, Serialize};
 
 pub async fn group_create(http: &Delta, data: &DataCreateGroup) -> Result<Channel, DeltaError> {
-    result(http.post(&format!("channels/create"), None).await).await
+    result(
+        http.post(
+            &format!("channels/create"),
+            Some(&serde_json::to_string(&data).unwrap()),
+        )
+        .await,
+    )
+    .await
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]

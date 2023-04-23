@@ -21,21 +21,21 @@ pub async fn message_send(
 pub struct DataMessageSend {
     /// Message content to send
     /// length min: 0, max: 2000
-    content: Option<String>,
+    pub content: Option<String>,
     /// Attachments to include in message
     /// length min: 1, max: 128
-    attachments: Option<Vec<String>>,
+    pub attachments: Option<Vec<String>>,
     /// Messages to reply to
-    replies: Option<Vec<Reply>>,
+    pub replies: Option<Vec<Reply>>,
     /// Embeds to include in message
     ///
     /// Text embed content contributes to the content length cap
     /// length min: 1, max: 10
-    embeds: Option<Vec<SendableEmbed>>,
+    pub embeds: Option<Vec<SendableEmbed>>,
     /// Masquerade to apply to this message
-    masquerade: Option<Masquerade>,
+    pub masquerade: Option<Masquerade>,
     /// Information about how this message should be interacted with
-    interactions: Option<Interactions>,
+    pub interactions: Option<Interactions>,
 }
 
 impl DataMessageSend {
@@ -45,8 +45,13 @@ impl DataMessageSend {
         }
     }
 
-    pub fn content(&mut self, content: &str) -> Self {
+    pub fn set_content(&mut self, content: &str) -> Self {
         self.content = Some(String::from(content));
+        self.to_owned()
+    }
+
+    pub fn set_masquerade(&mut self, masquerade: &Masquerade) -> Self {
+        self.masquerade = Some(masquerade.clone());
         self.to_owned()
     }
 }

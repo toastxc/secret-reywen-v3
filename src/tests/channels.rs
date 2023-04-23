@@ -13,6 +13,7 @@ mod tests {
             message_fetch,
             message_query::{self, OptionsQueryMessages},
             message_react,
+            message_search::{self, OptionsMessageSearch},
             message_send::{self, DataMessageSend},
         },
         tests::common::{tester_bot, tester_user, CHANNEL, GROUP},
@@ -150,7 +151,7 @@ mod tests {
     async fn test_message_delete() {
         let http = tester_bot().await;
 
-        let create_result_data = DataMessageSend::new().content("reywen_test");
+        let create_result_data = DataMessageSend::new().set_content("reywen_test");
         let create_result = message_send::message_send(&http, CHANNEL, &create_result_data).await;
 
         if let Err(error) = create_result {
@@ -169,7 +170,7 @@ mod tests {
     async fn test_message_edit() {
         let http = tester_bot().await;
 
-        let original_message_data = DataMessageSend::new().content("original content");
+        let original_message_data = DataMessageSend::new().set_content("original content");
         let original_message =
             message_send::message_send(&http, CHANNEL, &original_message_data).await;
 
@@ -195,7 +196,7 @@ mod tests {
     async fn test_message_fetch() {
         let http = tester_bot().await;
 
-        let original_message_data = DataMessageSend::new().content("fetch test");
+        let original_message_data = DataMessageSend::new().set_content("fetch test");
         let original_message =
             message_send::message_send(&http, CHANNEL, &original_message_data).await;
 
@@ -234,6 +235,26 @@ mod tests {
         )
         .await
         {
+            panic!("{:#?}", error);
+        }
+    }
+
+    #[tokio::test]
+    async fn test_message_search() {
+        let http = tester_user().await;
+
+        let data = OptionsMessageSearch::new("womp").set_include_users(true);
+        if let Err(error) = message_search::message_search(&http, CHANNEL, &data).await {
+            panic!("{:#?}", error);
+        }
+    }
+
+    #[tokio::test]
+    async fn test_message_send() {
+        let http = tester_user().await;
+
+        let data = DataMessageSend::new().set_content("womo");
+        if let Err(error) = message_send::message_send(&http, CHANNEL, &data).await {
             panic!("{:#?}", error);
         }
     }

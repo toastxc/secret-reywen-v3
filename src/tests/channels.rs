@@ -6,11 +6,16 @@ mod tests {
             channel_edit::{self, DataEditChannel},
             channel_fetch, group_add_member,
             group_create::{self, DataCreateGroup},
-            group_remove_member, invite_create, members_fetch,
-            message_ack::{self, message_ack},
-            message_bulk_delete::{self, DataBulkDelete}, message_clear_reactions, message_send::{message_send, self, DataMessageSend}, message_delete::{message_delete, self}, message_edit::{message_edit, DataEditMessage, self}, message_fetch::{message_fetch, self},
+            group_remove_member, invite_create, members_fetch, message_ack,
+            message_bulk_delete::{self, DataBulkDelete},
+            message_clear_reactions, message_delete,
+            message_edit::{self, DataEditMessage},
+            message_fetch,
+            message_query::{self, OptionsQueryMessages},
+            message_react,
+            message_send::{self, DataMessageSend},
         },
-        tests::common::{tester_bot, tester_user, CHANNEL, GROUP, SERVER},
+        tests::common::{tester_bot, tester_user, CHANNEL, GROUP},
     };
 
     #[tokio::test]
@@ -130,7 +135,13 @@ mod tests {
     async fn test_message_clear_reactions() {
         let http = tester_bot().await;
 
-        if let Err(error) = message_clear_reactions::message_clear_reactions(&http, CHANNEL, "01GYMCHDB9WRYN8WEVG25FESVS").await {
+        if let Err(error) = message_clear_reactions::message_clear_reactions(
+            &http,
+            CHANNEL,
+            "01GYMCHDB9WRYN8WEVG25FESVS",
+        )
+        .await
+        {
             panic!("{:#?}", error);
         }
     }
@@ -147,7 +158,9 @@ mod tests {
         }
 
         let cr_data = create_result.ok().unwrap();
-        if let Err(error) = message_delete::message_delete(&http, CHANNEL, cr_data._id.as_str()).await {
+        if let Err(error) =
+            message_delete::message_delete(&http, CHANNEL, cr_data.id.as_str()).await
+        {
             panic!("delete message failed {:#?}", error);
         }
     }
@@ -157,7 +170,8 @@ mod tests {
         let http = tester_bot().await;
 
         let original_message_data = DataMessageSend::new().content("original content");
-        let original_message = message_send::message_send(&http, CHANNEL, &original_message_data).await;
+        let original_message =
+            message_send::message_send(&http, CHANNEL, &original_message_data).await;
 
         if let Err(error) = original_message {
             panic!("create message failed (required for test) {:#?}", error);
@@ -165,7 +179,14 @@ mod tests {
 
         let original_message_success = original_message.ok().unwrap();
         let edit_message_data = DataEditMessage::new().content("edited content");
-        if let Err(error) = message_edit::message_edit(&http, CHANNEL, original_message_success._id.as_str(), &edit_message_data).await {
+        if let Err(error) = message_edit::message_edit(
+            &http,
+            CHANNEL,
+            original_message_success.id.as_str(),
+            &edit_message_data,
+        )
+        .await
+        {
             panic!("edit message failed {:#?}", error);
         }
     }
@@ -175,15 +196,45 @@ mod tests {
         let http = tester_bot().await;
 
         let original_message_data = DataMessageSend::new().content("fetch test");
-        let original_message = message_send::message_send(&http, CHANNEL, &original_message_data).await;
+        let original_message =
+            message_send::message_send(&http, CHANNEL, &original_message_data).await;
 
         if let Err(error) = original_message {
             panic!("create message failed (required for test) {:#?}", error);
         }
 
         let og_succ = original_message.ok().unwrap();
-        if let Err(error) = message_fetch::message_fetch(&http, CHANNEL, og_succ._id.as_str()).await {
+        if let Err(error) = message_fetch::message_fetch(&http, CHANNEL, og_succ.id.as_str()).await
+        {
             panic!("fetch message failed {:#?}", error);
+        }
+    }
+
+    #[tokio::test]
+    async fn test_message_query() {
+        let http = tester_user().await;
+
+        let data = OptionsQueryMessages::new()
+            .set_limit(24)
+            .set_include_users(true);
+        if let Err(error) = message_query::message_query(&http, CHANNEL, &data).await {
+            panic!("{:#?}", error);
+        }
+    }
+
+    #[tokio::test]
+    async fn test_emoji_react() {
+        let http = tester_user().await;
+
+        if let Err(error) = message_react::message_react(
+            &http,
+            CHANNEL,
+            "01GYP3PB8VBS6B6DE9YVRK8C69",
+            "01G83M8KJE4KGQCQT2PP5EH3VT",
+        )
+        .await
+        {
+            panic!("{:#?}", error);
         }
     }
 }

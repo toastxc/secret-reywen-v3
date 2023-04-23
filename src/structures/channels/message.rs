@@ -116,11 +116,11 @@ pub struct Message {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub replies: Option<Vec<String>>,
     /// Hashmap of emoji IDs to array of user IDs
-  //  #[serde(skip_serializing_if = "IndexMap::is_empty", default)]
-   // pub reactions: IndexMap<String, IndexSet<String>>,
+    //  #[serde(skip_serializing_if = "IndexMap::is_empty", default)]
+    // pub reactions: IndexMap<String, IndexSet<String>>,
     /// Information about how this message should be interacted with
-   // #[serde(skip_serializing_if = "Interactions::is_default", default)]
-   // pub interactions: Interactions,
+    // #[serde(skip_serializing_if = "Interactions::is_default", default)]
+    // pub interactions: Interactions,
     /// Name and / or avatar overrides for this message
     #[serde(skip_serializing_if = "Option::is_none")]
     pub masquerade: Option<Masquerade>,
@@ -159,7 +159,7 @@ pub enum MessageTimePeriod {
 }
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub enum BulkMessageResponse {
-    JustMessages(
+    Messages(
         /// List of messages
         Vec<Message>,
     ),

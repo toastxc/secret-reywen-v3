@@ -1,7 +1,7 @@
 mod media {
     pub mod attachment;
-    pub mod emoji;
     pub mod embeds;
+    pub mod emoji;
 }
 
 pub mod channels {
@@ -12,6 +12,7 @@ pub mod channels {
 }
 
 pub mod users {
+    pub mod bot;
     pub mod user;
 }
 

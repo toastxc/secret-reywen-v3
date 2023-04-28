@@ -1,14 +1,12 @@
-use serde::{Deserialize, Serialize};
-
 use crate::{
     methods::driver::{result, Delta, DeltaError},
-    structures::server::server::Server,
+    structures::{permissions::exports::ServerDefaultPermissions, server::server::Server},
 };
 
 pub async fn permissions_set_default(
     http: &Delta,
     server: &str,
-    data: DataPermissionSetDefault,
+    data: ServerDefaultPermissions,
 ) -> Result<Server, DeltaError> {
     result(
         http.put(
@@ -18,15 +16,4 @@ pub async fn permissions_set_default(
         .await,
     )
     .await
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, Default)]
-pub struct DataPermissionSetDefault {
-    pub permissions: u64,
-}
-
-impl DataPermissionSetDefault {
-    pub fn new(permissions: u64) -> Self {
-        Self { permissions }
-    }
 }

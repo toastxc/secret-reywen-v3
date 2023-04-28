@@ -1,67 +1,74 @@
 use serde::{Deserialize, Serialize};
 
-use super::definitions::Permission;
+use super::definitions::{Override, Permission};
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
-pub struct DataPermissionSet {
-    pub permissions: DataPermissions,
-}
-#[derive(Debug, Clone, Serialize, Deserialize, Default)]
-pub struct DataPermissions {
-    pub allow: u32,
-    pub deny: u32,
-}
-impl DataPermissions {
-    pub fn new() -> Self {
-        Self {
-            ..Default::default()
-        }
-    }
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, Default)]
-pub struct ReadablePermissionData {
+pub struct Permissions {
     pub allow: Vec<Permission>,
     pub deny: Vec<Permission>,
 }
-impl ReadablePermissionData {
+
+impl Permissions {
+    // converts from readable to bitwise
+
+    pub fn add_allow(&mut self, permission: Permission) -> Self {
+        self.allow.push(permission);
+        self.clone()
+    }
+
+    pub fn add_deny(&mut self, permission: Permission) -> Self {
+        self.deny.push(permission);
+        self.clone()
+    }
+
     pub fn default() -> Self {
         Self {
             ..Default::default()
         }
     }
+
+    pub fn export(&self) -> PermissionDataConversion {
+        // define channel
+        let mut channel = Override::new();
+
+        for x in self.allow.clone() {
+            channel.allow += x as u64;
+        }
+        for x in self.deny.clone() {
+            channel.deny += x as u64;
+        }
+
+        // define group
+
+        let mut group = 0;
+
+        for x in self.allow.clone() {
+            group += x as u64;
+        }
+
+        // deny is simply dropped from scope
+
+        PermissionDataConversion {
+            readable: self.clone(),
+            group,
+            channel,
+        }
+    }
 }
 
-#[derive(Deserialize, Serialize, Debug, Default, Clone)]
-pub struct Permissions {
-    pub readable: ReadablePermissionData,
-}
+// todo permissions map
+//
+// There are 3 ways of storing permission data
+// 1 Readable data, this is a vec of enums with readable names to represent the value of each perm
+// 2 DataPermission / Roled, this contains two u64s representing allow and deny permissions
+// 3 NRoled, this contains a single u64 and is applicable for channels that do not have roles
 
-impl Permissions {
-    // converts from readable to bitwise
-    pub fn export(&self) -> DataPermissionSet {
-        let mut result = DataPermissions::new();
-
-        for x in self.readable.allow.clone() {
-            result.allow += x as u32;
-        }
-
-        for x in self.readable.deny.clone() {
-            result.deny += x as u32;
-        }
-
-        DataPermissionSet {
-            permissions: result,
-        }
-    }
-
-    pub fn add_allow(&mut self, permission: Permission) -> Self {
-        self.readable.allow.push(permission);
-        self.clone()
-    }
-
-    pub fn add_deny(&mut self, permission: Permission) -> Self {
-        self.readable.deny.push(permission);
-        self.clone()
-    }
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct PermissionDataConversion {
+    // readable data
+    pub readable: Permissions,
+    // data for roleless entries
+    pub group: u64,
+    // data for roled entries
+    pub channel: Override,
 }

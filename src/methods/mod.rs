@@ -21,10 +21,10 @@ mod servers {
 }
 pub use servers::*;
 
+pub mod corelib;
 pub mod driver;
 
 pub mod channels {
-    pub mod channel_ack;
     pub mod channel_delete;
     pub mod channel_edit;
     pub mod channel_fetch;
@@ -33,13 +33,13 @@ pub mod channels {
     pub mod group_remove_member;
     pub mod invite_create;
     pub mod members_fetch;
+    pub mod message_ack;
     pub mod message_bulk_delete;
     pub mod message_clear_reactions;
     pub mod message_delete;
     pub mod message_edit;
     pub mod message_fetch;
     pub mod message_query;
-    pub mod message_query_stale;
     pub mod message_react;
     pub mod message_search;
     pub mod message_send;

@@ -10,4 +10,4 @@ Cargo.lock
 **/*.rs.bk
 
 # token for testing
-src/tests/token.txt
+src/tests/*token.txt

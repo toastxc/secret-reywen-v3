@@ -1,6 +1,9 @@
 use serde::{Deserialize, Serialize};
 
-use super::definitions::{Override, Permission};
+use super::{
+    definitions::{Override, Permission},
+    newcalc::{Field, PermissionData, Value},
+};
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct Permissions {
@@ -27,7 +30,7 @@ impl Permissions {
         }
     }
 
-    pub fn export(&self) -> PermissionDataConversion {
+    pub fn export(&self) -> PermissionData {
         // define channel
         let mut channel = Override::new();
 
@@ -48,27 +51,11 @@ impl Permissions {
 
         // deny is simply dropped from scope
 
-        PermissionDataConversion {
-            readable: self.clone(),
-            group,
-            channel,
+        PermissionData {
+            value: Value { permissions: group },
+            field: Field {
+                permissions: channel,
+            },
         }
     }
-}
-
-// todo permissions map
-//
-// There are 3 ways of storing permission data
-// 1 Readable data, this is a vec of enums with readable names to represent the value of each perm
-// 2 DataPermission / Roled, this contains two u64s representing allow and deny permissions
-// 3 NRoled, this contains a single u64 and is applicable for channels that do not have roles
-
-#[derive(Debug, Clone, Serialize, Deserialize, Default)]
-pub struct PermissionDataConversion {
-    // readable data
-    pub readable: Permissions,
-    // data for roleless entries
-    pub group: u64,
-    // data for roled entries
-    pub channel: Override,
 }

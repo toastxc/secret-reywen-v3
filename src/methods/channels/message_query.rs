@@ -1,9 +1,7 @@
 use crate::methods::corelib::struct_to_url;
 use crate::methods::driver::{result, Delta, DeltaError};
 
-use crate::structures::channels::message::{
-    BulkMessageResponse, BulkMessageResponse2, MessageSort,
-};
+use crate::structures::channels::message::{BulkMessageResponse2, MessageSort};
 use serde::{Deserialize, Serialize};
 
 pub async fn message_query(

@@ -9,10 +9,16 @@ pub fn struct_to_url<T: Serialize>(query: T) -> String {
         .unwrap_or_default();
 
     for (key, value) in json_obj {
-        // null handling
-        if !value.is_null() {
+        // arrays and objects are not supported in a URL query, and as such cannot be imported
+        // nulls and None enum varients are denied as they do not contain data
+        if !value.is_null() && !value.is_object() && !value.is_array() {
             iter.push(format!("{key}={value}"));
         };
+
+        // warning
+        if value.is_object() | value.is_array() {
+            println!("WARNING: input field invalid for URL, it has been skipped:\nKEY: {key}\nVALUE:{value}")
+        }
     }
 
     if iter.is_empty() {

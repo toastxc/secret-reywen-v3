@@ -97,7 +97,7 @@ pub async fn common(
 ) -> Result<Response, reqwest::Error> {
     // custom client build conf
     let client_b = reqwest::ClientBuilder::new()
-        .user_agent("RevoltBot/10.0 (Linux; async-tokio-runtime)")
+        .user_agent("Reywen-Revolt/10.0 (Linux; async-tokio-runtime)")
         .timeout(std::time::Duration::from_secs(10));
     // client constructor
     let mut client = client_b

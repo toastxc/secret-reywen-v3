@@ -2,21 +2,16 @@
 mod tests {
     use crate::{
         methods::channels::{
-            channel_delete,
-            channel_edit::{self, DataEditChannel},
-            channel_fetch, group_add_member,
-            group_create::{self, DataCreateGroup},
-            group_remove_member, invite_create, members_fetch, message_ack,
-            message_bulk_delete::{self, DataBulkDelete},
-            message_clear_reactions, message_delete,
-            message_edit::{self, DataEditMessage},
-            message_fetch,
-            message_query::{self, OptionsQueryMessages},
-            message_react,
-            message_search::{self, OptionsMessageSearch},
-            message_send::{self, DataMessageSend},
+            channel_edit::DataEditChannel, group_create::DataCreateGroup,
+            message_bulk_delete::DataBulkDelete, message_edit::DataEditMessage,
+            message_query::OptionsQueryMessages, message_search::OptionsMessageSearch,
+            message_send::DataMessageSend, message_unreact::OptionsUnreact, *,
         },
-        tests::common::{tester_bot, tester_user, CHANNEL, GROUP},
+        structures::{
+            channels::*,
+            permissions::{calculator::Permissions, definitions::Permission},
+        },
+        tests::common::*,
     };
 
     #[tokio::test]
@@ -258,9 +253,68 @@ mod tests {
             panic!("{:#?}", error);
         }
     }
+
+    #[tokio::test]
+    async fn test_message_unreact() {
+        let http = tester_user().await;
+
+        let data = OptionsUnreact::new();
+        if let Err(error) = message_unreact::message_unreact(
+            &http,
+            CHANNEL,
+            "01GYP6KM9C51XFQNG13ANR4PT1",
+            "01GQE86CT9MKAHPTG55HMTG7TR",
+            data,
+        )
+        .await
+        {
+            panic!("{:#?}", error);
+        }
+    }
+
+    #[tokio::test]
+    async fn test_permission_set() {
+        let http = tester_user().await;
+        let data = Permissions::default()
+            .add_allow(Permission::ViewChannel)
+            .add_allow(Permission::KickMembers);
+
+        if let Err(error) = permissions_set::permissions_set(
+            &http,
+            "01GKWVWGHNBNCFPC9Q7CRDHBVZ",
+            "01GXFR9FPEPFY188X5MKV2E8ZN",
+            data.export(),
+        )
+        .await
+        {
+            panic!("{:#?}", error);
+        }
+    }
+
+    #[tokio::test]
+    async fn test_permissions_set_default() {
+        let http = tester_user().await;
+
+        let data = Permissions::default()
+            .add_allow(Permission::ViewChannel)
+            .add_allow(Permission::SendMessage)
+            .export();
+
+        println!("{:#?}", data);
+
+        if let Err(error) = permissions_set_default::permissions_set_default(
+            &http,
+            "01GXDKYV0P4T6DHNNG7M15CQ5R",
+            data,
+            false,
+        )
+        .await
+        {
+            panic!("{:#?}", error);
+        }
+    }
 }
 
-//message_ack
 /*
 
 

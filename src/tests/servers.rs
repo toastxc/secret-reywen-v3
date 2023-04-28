@@ -92,8 +92,7 @@ mod tests {
         let data = Permissions::default()
             .add_allow(Permission::ViewChannel)
             .add_allow(Permission::KickMembers)
-            .export()
-            .server_default_permissions();
+            .export();
 
         if let Err(error) =
             permissions_set_default::permissions_set_default(&http, SERVER, data).await
@@ -116,16 +115,10 @@ mod tests {
 
         let perms = Permissions::default()
             .add_allow(Permission::ViewChannel)
-            .add_allow(Permission::KickMembers);
+            .add_allow(Permission::KickMembers)
+            .export();
 
-        if let Err(error) = permissions_set::permissions_set(
-            &http,
-            SERVER,
-            ROLE,
-            perms.export().server_permissions(),
-        )
-        .await
-        {
+        if let Err(error) = permissions_set::permissions_set(&http, SERVER, ROLE, perms).await {
             panic!("{:#?}", error);
         }
     }

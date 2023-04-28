@@ -1,7 +1,7 @@
 mod media {
     pub mod attachment;
-    pub mod emoji;
     pub mod embeds;
+    pub mod emoji;
 }
 
 pub mod channels {
@@ -23,5 +23,5 @@ pub mod server {
 pub mod permissions {
     pub mod calculator;
     pub mod definitions;
-    pub mod exports;
+    pub mod newcalc;
 }

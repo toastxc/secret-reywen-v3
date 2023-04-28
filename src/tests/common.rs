@@ -4,6 +4,7 @@ pub const USER: &str = "01GXF9E5H7K6BSJ6Q9QGWYRVWD";
 pub const ROLE: &str = "01GXFR9FPEPFY188X5MKV2E8ZN";
 pub const CHANNEL: &str = "01GKWVWGHNBNCFPC9Q7CRDHBVZ";
 pub const GROUP: &str = "01GYM0JBNKWRJYX56F9GYABS4R";
+pub const BOT: &str = "01GXF9E5H7K6BSJ6Q9QGWYRVWD";
 // enter values here for testing
 
 pub async fn tester_bot() -> Delta {

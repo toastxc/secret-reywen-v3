@@ -119,7 +119,7 @@ pub async fn common(
     client.send().await
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug)]
 pub enum DeltaError {
     HTTP(reqwest::StatusCode, String),
     REQWEST(reqwest::Error),

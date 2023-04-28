@@ -78,5 +78,4 @@ impl DataEditChannel {
         }
         self.to_owned()
     }
-
 }

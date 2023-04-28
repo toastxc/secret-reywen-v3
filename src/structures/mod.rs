@@ -12,6 +12,7 @@ pub mod channels {
 }
 
 pub mod users {
+    pub mod bot;
     pub mod user;
 }
 

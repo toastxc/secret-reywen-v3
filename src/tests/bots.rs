@@ -8,7 +8,7 @@ mod tests {
             bot_edit::{self, DataEditBot},
             bot_fetch, bot_fetch_owned, bot_fetch_public, bot_invite,
         },
-        tests::common::{tester_user, BOT, CHANNEL, GROUP, SERVER},
+        tests::common::{tester_user, BOT,  SERVER},
     };
 
     #[tokio::test]

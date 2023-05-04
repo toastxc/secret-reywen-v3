@@ -7,10 +7,7 @@ mod tests {
             message_query::OptionsQueryMessages, message_search::OptionsMessageSearch,
             message_send::DataMessageSend, message_unreact::OptionsUnreact, *,
         },
-        structures::{
-            channels::*,
-            permissions::{calculator::Permissions, definitions::Permission},
-        },
+        structures::permissions::{calculator::Permissions, definitions::Permission},
         tests::common::*,
     };
 

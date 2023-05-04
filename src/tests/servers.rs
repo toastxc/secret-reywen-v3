@@ -3,12 +3,26 @@ mod tests {
 
     use crate::{
         methods::{
-            ban_create::DataBanReason, channel_create::DataChannelCreate,
-            member_edit::DataMemberEdit, roles_create::DataRoleCreate, roles_edit::DataEditRole,
-            server_create::DataCreateServer, server_edit::DataEditServer, *,
+            channels::permissions_set,
+            servers::{
+                ban_create::{self, DataBanReason},
+                ban_list, ban_remove,
+                channel_create::{self, DataChannelCreate},
+                invites_fetch,
+                member_edit::{self, DataMemberEdit},
+                member_fetch, member_fetch_all, member_remove, permissions_set_default,
+                roles_create::{self, DataRoleCreate},
+                roles_delete,
+                roles_edit::{self, DataEditRole},
+                server_ack,
+                server_create::{self, DataCreateServer},
+                server_delete,
+                server_edit::{self, DataEditServer},
+                server_fetch,
+            },
         },
         structures::permissions::{calculator::Permissions, definitions::Permission},
-        tests::common::{tester_bot, ROLE, SERVER, USER},
+        tests::common::{tester_bot, SERVER, ROLE, USER},
     };
 
     use super::*;

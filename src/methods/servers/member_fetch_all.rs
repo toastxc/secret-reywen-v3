@@ -5,7 +5,7 @@ use crate::{
     structures::{server::server_member::Member, users::user::User},
 };
 
-pub async fn member_fetch_all(http: &Delta, server: &str) -> Result<AllMemberResponse, DeltaError> {
+pub async fn member_fetch_all(http: &Delta, server: &str) -> Result<ResponseMemberAll, DeltaError> {
     result(http.get(&format!("/servers/{server}/members")).await).await
 }
 
@@ -13,7 +13,7 @@ pub async fn member_fetch_all(http: &Delta, server: &str) -> Result<AllMemberRes
 ///
 /// Both lists are sorted by ID.
 #[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct AllMemberResponse {
+pub struct ResponseMemberAll {
     /// List of members
     pub members: Vec<Member>,
     /// List of users

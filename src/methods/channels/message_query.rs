@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 pub async fn message_query(
     http: &Delta,
     channel: &str,
-    query: &OptionsQueryMessages,
+    query: &DataQueryMessages,
 ) -> Result<BulkMessageResponse2, DeltaError> {
     result(
         http.get(&format!(
@@ -21,7 +21,7 @@ pub async fn message_query(
 
 /// # Query Parameters
 #[derive(Serialize, Deserialize, Debug, Default, Clone)]
-pub struct OptionsQueryMessages {
+pub struct DataQueryMessages {
     /// Maximum number of messages to fetch
     ///
     /// For fetching nearby messages, this is \`(limit + 1)\`.
@@ -46,7 +46,7 @@ pub struct OptionsQueryMessages {
     pub include_users: Option<bool>,
 }
 
-impl OptionsQueryMessages {
+impl DataQueryMessages {
     pub fn new() -> Self {
         Self {
             ..Default::default()

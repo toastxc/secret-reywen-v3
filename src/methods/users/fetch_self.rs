@@ -4,5 +4,5 @@ use crate::{
 };
 
 pub async fn fetch_self(http: Delta) -> Result<User, DeltaError> {
-    result(http.get("users/@me", None).await).await
+    result(http.get("users/@me").await).await
 }

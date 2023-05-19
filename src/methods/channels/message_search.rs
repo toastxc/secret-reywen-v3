@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 pub async fn message_search(
     http: &Delta,
     channel: &str,
-    search_options: &OptionsMessageSearch,
+    search_options: &DataMessageSearch,
 ) -> Result<BulkMessageResponse2, DeltaError> {
     let data = serde_json::to_string(search_options).unwrap();
     result(
@@ -17,7 +17,7 @@ pub async fn message_search(
 
 /// # Search Parameters
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
-pub struct OptionsMessageSearch {
+pub struct DataMessageSearch {
     /// Full-text search query
     ///
     /// See [MongoDB documentation](https://docs.mongodb.com/manual/text-search/#-text-operator) for more information.
@@ -41,7 +41,7 @@ pub struct OptionsMessageSearch {
     pub include_users: Option<bool>,
 }
 
-impl OptionsMessageSearch {
+impl DataMessageSearch {
     pub fn new(query: &str) -> Self {
         Self {
             query: String::from(query),

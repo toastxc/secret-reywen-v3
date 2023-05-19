@@ -10,7 +10,7 @@ pub async fn message_unreact(
     channel: &str,
     message: &str,
     emoji: &str,
-    data: OptionsUnreact,
+    data: DataUnreact,
 ) -> Result<(), DeltaError> {
     result(
         http.delete(
@@ -27,14 +27,14 @@ pub async fn message_unreact(
 
 /// # Query Parameters
 #[derive(Serialize, Deserialize, Debug, Default, Clone)]
-pub struct OptionsUnreact {
+pub struct DataUnreact {
     /// Remove a specific user's reaction
     pub user_id: Option<String>,
     /// Remove all reactions
     pub remove_all: Option<bool>,
 }
 
-impl OptionsUnreact {
+impl DataUnreact {
     pub fn new() -> Self {
         Self {
             ..Default::default()

@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{methods::corelib::if_false, structures::media::attachment::File};
+use crate::{methods::util::if_false, structures::media::attachment::File};
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct PublicBot {

@@ -3,29 +3,13 @@ mod tests {
 
     use crate::{
         methods::{
-            channels::permissions_set,
-            servers::{
-                ban_create::{self, DataBanReason},
-                ban_list, ban_remove,
-                channel_create::{self, DataChannelCreate},
-                invites_fetch,
-                member_edit::{self, DataMemberEdit},
-                member_fetch, member_fetch_all, member_remove, permissions_set_default,
-                roles_create::{self, DataRoleCreate},
-                roles_delete,
-                roles_edit::{self, DataEditRole},
-                server_ack,
-                server_create::{self, DataCreateServer},
-                server_delete,
-                server_edit::{self, DataEditServer},
-                server_fetch,
-            },
+            data::*,
+            permissions,
+            server::{self, member},
         },
         structures::permissions::{calculator::Permissions, definitions::Permission},
-        tests::common::{tester_bot, SERVER, ROLE, USER},
+        tests::common::{tester_bot, ROLE, SERVER, USER},
     };
-
-    use super::*;
 
     #[tokio::test]
     async fn test_member_edit() {
@@ -33,7 +17,7 @@ mod tests {
 
         let data = DataMemberEdit::default();
 
-        if let Err(curl) = member_edit::member_edit(&http, SERVER, USER, data).await {
+        if let Err(curl) = member::edit(&http, SERVER, USER, data).await {
             panic!("{:#?}", curl);
         }
     }
@@ -42,7 +26,7 @@ mod tests {
     async fn test_member_remove() {
         let http = tester_bot().await;
 
-        if let Err(curl) = member_remove::member_remove(&http, SERVER, USER).await {
+        if let Err(curl) = member::remove(&http, SERVER, USER).await {
             panic!("{:#?}", curl);
         }
     }
@@ -51,7 +35,7 @@ mod tests {
     async fn test_member_fetch() {
         let http = tester_bot().await;
 
-        if let Err(curl) = member_fetch::member_fetch(&http, SERVER, USER).await {
+        if let Err(curl) = member::fetch::one(&http, SERVER, USER).await {
             panic!("{:#?}", curl);
         }
     }
@@ -59,7 +43,7 @@ mod tests {
     async fn test_member_fetch_all() {
         let http = tester_bot().await;
 
-        if let Err(curl) = member_fetch_all::member_fetch_all(&http, SERVER).await {
+        if let Err(curl) = member::fetch::all(&http, SERVER).await {
             panic!("{:#?}", curl);
         }
     }
@@ -72,11 +56,11 @@ mod tests {
         let banreason = DataBanReason {
             reason: Some(String::from("bot test")),
         };
-        if let Err(curl) = ban_create::ban_create(&http, SERVER, USER, banreason).await {
+        if let Err(curl) = server::ban::create(&http, SERVER, USER, banreason).await {
             panic!("ban user {:#?}", curl);
         }
 
-        if let Err(curl) = ban_remove::ban_remove(&http, SERVER, USER).await {
+        if let Err(curl) = server::ban::remove(&http, SERVER, USER).await {
             panic!("remove banned user {:#?}", curl);
         }
     }
@@ -85,7 +69,7 @@ mod tests {
     async fn test_ban_list() {
         let http = tester_bot().await;
 
-        if let Err(curl) = ban_list::ban_list(&http, SERVER).await {
+        if let Err(curl) = server::ban::list(&http, SERVER).await {
             panic!("list banned users {:#?}", curl);
         }
     }
@@ -95,7 +79,7 @@ mod tests {
 
         let create_chan = DataChannelCreate::new("womp");
 
-        if let Err(curl) = channel_create::channel_create(&http, SERVER, create_chan).await {
+        if let Err(curl) = server::channel::create(&http, SERVER, create_chan).await {
             panic!("{:#?}", curl);
         }
     }
@@ -108,9 +92,7 @@ mod tests {
             .add_allow(Permission::KickMembers)
             .export();
 
-        if let Err(error) =
-            permissions_set_default::permissions_set_default(&http, SERVER, data).await
-        {
+        if let Err(error) = permissions::server::set_default(&http, SERVER, data).await {
             panic!("{:#?}", error);
         }
     }
@@ -119,7 +101,7 @@ mod tests {
     async fn test_fetch_invites() {
         let http = tester_bot().await;
 
-        if let Err(error) = invites_fetch::invites_fetch(&http, SERVER).await {
+        if let Err(error) = server::invites::fetch(&http, SERVER).await {
             panic!("{:#?}", error);
         }
     }
@@ -132,7 +114,7 @@ mod tests {
             .add_allow(Permission::KickMembers)
             .export();
 
-        if let Err(error) = permissions_set::permissions_set(&http, SERVER, ROLE, perms).await {
+        if let Err(error) = permissions::server::set(&http, SERVER, ROLE, perms).await {
             panic!("{:#?}", error);
         }
     }
@@ -143,7 +125,7 @@ mod tests {
 
         let data = DataRoleCreate::new("dummyrole");
 
-        if let Err(error) = roles_create::roles_create(&http, SERVER, data).await {
+        if let Err(error) = server::role::create(&http, SERVER, data).await {
             panic!("{:#?}", error);
         }
     }
@@ -152,8 +134,7 @@ mod tests {
     async fn test_role_delete() {
         let http = tester_bot().await;
 
-        if let Err(error) =
-            roles_delete::roles_delete(&http, SERVER, "01GXG24BV8QMSFWXKFRHZV30AY").await
+        if let Err(error) = server::role::delete(&http, SERVER, "01GXG24BV8QMSFWXKFRHZV30AY").await
         {
             panic!("{:#?}", error);
         }
@@ -165,7 +146,7 @@ mod tests {
 
         let data = DataEditRole::new();
 
-        if let Err(error) = roles_edit::roles_edit(&http, SERVER, ROLE, data).await {
+        if let Err(error) = server::role::edit(&http, SERVER, ROLE, data).await {
             panic!("{:#?}", error);
         }
     }
@@ -177,7 +158,7 @@ mod tests {
 
         let data = DataCreateServer::new("DummyServer");
 
-        if let Err(error) = server_create::server_create(&http, data).await {
+        if let Err(error) = server::create(&http, data).await {
             panic!("{:#?}", error);
         }
     }
@@ -187,7 +168,7 @@ mod tests {
         let http = tester_bot().await;
         let data = DataEditServer::new();
 
-        if let Err(error) = server_edit::server_edit(&http, SERVER, data).await {
+        if let Err(error) = server::edit(&http, SERVER, data).await {
             panic!("{:#?}", error);
         }
     }
@@ -196,7 +177,7 @@ mod tests {
     async fn test_server_fetch() {
         let http = tester_bot().await;
 
-        if let Err(error) = server_fetch::server_fetch(&http, SERVER).await {
+        if let Err(error) = server::fetch(&http, SERVER).await {
             panic!("{:#?}", error);
         }
     }
@@ -206,7 +187,7 @@ mod tests {
     async fn test_server_ack() {
         let http = tester_bot().await;
 
-        if let Err(error) = server_ack::server_ack(&http, SERVER).await {
+        if let Err(error) = server::ack(&http, SERVER).await {
             panic!("{:#?}", error);
         }
     }
@@ -215,7 +196,7 @@ mod tests {
     async fn test_server_delete() {
         let http = tester_bot().await;
 
-        if let Err(error) = server_delete::server_delete(&http, SERVER).await {
+        if let Err(error) = server::delete(&http, SERVER).await {
             panic!("{:#?}", error);
         }
     }
@@ -240,7 +221,7 @@ mod tests {
         let http = tester().await;
 
         if let Err(error) =
-            template::template(&http, SERVER).await
+            template(&http, SERVER).await
         {
             panic!("{:#?}", error);
         }

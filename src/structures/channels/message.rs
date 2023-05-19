@@ -2,7 +2,7 @@ use iso8601_timestamp::Timestamp;
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    methods::corelib::if_false,
+    methods::util::if_false,
     structures::{
         media::{attachment::File, embeds::Embed},
         server::server_member::Member,

@@ -69,6 +69,10 @@ impl DataEditUser {
         }
         self.to_owned()
     }
+
+    pub fn new() -> Self {
+        Default::default()
+    }
 }
 #[derive(Serialize, Debug, Clone, Default)]
 pub struct UserProfileData {

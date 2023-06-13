@@ -8,28 +8,10 @@ pub const BOT: &str = "01GXF9E5H7K6BSJ6Q9QGWYRVWD";
 // enter values here for testing
 
 pub async fn tester_bot() -> Delta {
-    Delta::new(
-        // url
-        "https://api.revolt.chat/",
-        // token
-        include_str!("bot-token.txt"),
-        // timeout in seconds
-        10,
-        // is bot account
-        true,
-    )
+    Delta::new().set_url("https://api.revolt.chat/").add_header("x-bot-token",include_str!("bot-token.txt")).unwrap()
+
 }
 // enter values here for testing - with selfbot
 pub async fn tester_user() -> Delta {
-    tokio::time::sleep(std::time::Duration::from_secs(1)).await;
-    Delta::new(
-        // url
-        "https://api.revolt.chat/",
-        // token
-        include_str!("self-token.txt"),
-        // timeout in seconds
-        10,
-        // is bot account
-        false,
-    )
+    Delta::new().set_url("https://api.revolt.chat/").add_header("x-session-token",include_str!("self-token.txt")).unwrap()
 }

@@ -10,7 +10,7 @@ pub async fn message_unreact(
     channel: &str,
     message: &str,
     emoji: &str,
-    data: DataUnreact,
+    data: &DataUnreact,
 ) -> Result<(), DeltaError> {
     result(
         http.delete(

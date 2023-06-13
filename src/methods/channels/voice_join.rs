@@ -1,7 +1,8 @@
 use crate::methods::driver::{result, Delta, DeltaError};
 use serde::{Deserialize, Serialize};
 
-pub async fn message_send(
+// this is a method for depricated code,
+pub async fn voice_join(
     http: &Delta,
     channel: &str,
 ) -> Result<CreateVoiceUserResponse, DeltaError> {

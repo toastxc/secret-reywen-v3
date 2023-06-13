@@ -33,20 +33,22 @@ impl Websocket {
     }
 
     pub fn watchdog_compliance(&self) -> Result<(), WSError> {
-        match self.watchdog >= self.watchdog_limit {
-            true => Err(WSError::Watchdog(WatchdogError::ExceededComplianceLimit)),
-            false => todo!(),
+        if self.watchdog >= self.watchdog_limit {
+            Err(WSError::Watchdog(WatchdogError::ExceededComplianceLimit))
+        } else {
+            Ok(())
         }
     }
-}
-pub fn data_is<T: serde::de::DeserializeOwned>(input: &Result<Message, WSError>) -> Option<T> {
-    match serde_json::from_slice::<T>(
-        &(match input {
-            Ok(data) => data.to_owned().into_data(),
-            Err(_) => return None,
-        }),
+    pub fn data_is<T: serde::de::DeserializeOwned>(input: &Result<Message, WSError>) -> Option<T> {
+        match serde_json::from_slice::<T>(
+            &(match input {
+                Ok(data) => data.to_owned().into_data(),
+                Err(_) => return None,
+            }),
     ) {
-        Ok(data) => Some(data),
-        Err(_) => None,
+            Ok(data) => Some(data),
+            Err(_) => None,
+        }
     }
+    
 }

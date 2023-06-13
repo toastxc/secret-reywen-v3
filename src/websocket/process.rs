@@ -2,7 +2,7 @@
 use crate::structures::channels::message;
 // internal websocket lib
 use super::{
-    data::{data_is, Websocket},
+    data::Websocket,
     result::{error::WSError, traits::ErrorConvert},
     WSRead, WSWrite,
 };
@@ -61,7 +61,7 @@ impl Websocket {
     pub async fn message_handler(data: Result<Message, WSError>) -> Result<(), WSError> {
         if let Err(error) = data {
             return Err(error);
-        } else if let Some(message) = data_is::<message::Message>(&data) {
+        } else if let Some(message) = Websocket::data_is::<message::Message>(&data) {
             println!("{:#?}", message.content)
         };
         Ok(())

@@ -24,7 +24,7 @@ impl Permissions {
         self.clone()
     }
 
-    pub fn default() -> Self {
+    pub fn new() -> Self {
         Self {
             ..Default::default()
         }

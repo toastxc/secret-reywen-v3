@@ -1,4 +1,17 @@
 #[macro_export]
+macro_rules! derive_a0 {
+    ($(($method:ident, $method_path:path, $return_type:ty)),* $(,)?) => {
+        $(
+            pub async fn $method(
+                &self
+            ) -> Result<$return_type, DeltaError> {
+                $method_path(&self.connection).await
+            }
+        )*
+    };
+}
+
+#[macro_export]
 macro_rules! derive_a1 {
     ($(($method:ident, $method_path:path, $data_type:ty, $return_type:ty)),* $(,)?) => {
         $(

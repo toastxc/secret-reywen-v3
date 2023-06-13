@@ -4,3 +4,5 @@ pub mod tests;
 pub mod api {
     pub use crate::methods::*;
 }
+pub mod websocket;
+

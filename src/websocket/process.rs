@@ -1,69 +1,52 @@
-//reywen
-use crate::structures::channels::message;
-// internal websocket lib
-use super::{
-    data::Websocket,
-    result::{error::WSError, traits::ErrorConvert},
-    WSRead, WSWrite,
-};
-// websocket
-use tokio_tungstenite::{connect_async, tungstenite::Message};
-// async
-use futures_util::{lock::Mutex, SinkExt, StreamExt};
+use std::pin::Pin;
+
+use futures_util::{Stream, StreamExt};
+use tokio_tungstenite::{connect_async, WebSocketStream};
+
+use super::{data::WebSocketEvent, data::Websocket};
 
 impl Websocket {
-    pub async fn generate(&self) -> Result<WSRead, WSError> {
+    pub async fn stream(input: Connection) -> Pin<Box<impl Stream<Item = WebSocketEvent>>> {
+        Box::pin({
+            (input).filter_map(|result| async {
+                match result {
+                    Ok(message) => serde_json::from_slice(&message.into_data()).ok(),
+                    Err(e) => {
+                        println!("{e}");
+                        None
+                    }
+                }
+            })
+        })
+    }
+
+    pub async fn generate(self) -> Connection {
         let url = format!(
             "wss://{}/?version=1format={}&token={}",
             self.domain, self.format, self.token
         );
 
-        let ws = connect_async(url).await.res()?;
-        let (stream, _response) = ws;
-
-        let (write, read) = stream.split();
-
-        tokio::spawn(Websocket::ping_server(Mutex::new(write)));
-
-        Ok(read)
+        let (ws_stream, _) = connect_async(url).await.expect("Failed to connect");
+        ws_stream
     }
 
-    async fn ping_server(write: WSWrite) {
-        loop {
-            tokio::time::sleep(tokio::time::Duration::from_secs(20)).await;
+    pub async fn start(self) -> Pin<Box<impl Stream<Item = WebSocketEvent>>> {
+        Websocket::stream(self.generate().await).await
+    }
+}
 
-            write
-                .lock()
-                .await
-                .send(Message::Text(String::from(
-                    "{\n    \"type\": \"Ping\",\n    \"data\": 0\n}",
-                )))
-                .await
-                .ok();
+type Connection = WebSocketStream<tokio_tungstenite::MaybeTlsStream<tokio::net::TcpStream>>;
+
+// test of reywenv3 websocket owo
+pub async fn test(input: Websocket) {
+    // generate a websocket connection AND convert types
+    let mut ws = input.start().await;
+
+    // for every message
+    while let Some(item) = ws.next().await {
+        // if the event is a message
+        if let WebSocketEvent::Message { .. } = item {
+            println!("yipeee!")
         }
-    }
-
-    pub async fn ws_handler(ws: Websocket) -> Result<(), WSError> {
-        loop {
-            ws.generate()
-                .await?
-                .for_each(|data| async {
-                    if let Err(error) = tokio::spawn(Websocket::message_handler(data.res())).await {
-                        println!("WARNING: {:#?}", error);
-                        ws.to_owned().increment_watchdog();
-                    };
-                })
-                .await;
-            ws.watchdog_compliance()?;
-        }
-    }
-
-    pub async fn message_handler(data: Result<Message, WSError>) -> Result<(), WSError> {
-        if let Err(error) = data {
-            return Err(error);
-        } else if let Some(message) = Websocket::data_is::<message::Message>(&data) {
-            println!("{:#?}", message.content)
-        };
-        Ok(())
     }
 }

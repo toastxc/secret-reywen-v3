@@ -130,7 +130,7 @@ pub mod data {
             ban_create::DataBanReason, ban_list::DataBanList, channel_create::DataChannelCreate,
             member_edit::DataMemberEdit, member_remove::AllMemberResponse,
             roles_create::DataRoleCreate, roles_edit::DataEditRole,
-            server_create::DataCreateServer, server_edit::DataEditServer,
+            server_create::DataCreateServer, server_edit::DataEditServer, ban_create::DataBan,
         },
     };
 }

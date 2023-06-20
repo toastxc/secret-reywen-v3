@@ -24,10 +24,10 @@ impl Permissions {
         self.clone()
     }
 
-    pub fn default() -> Self {
-        Self {
-            ..Default::default()
-        }
+    pub fn new() -> Self {
+
+            Default::default()
+
     }
 
     pub fn export(&self) -> PermissionData {

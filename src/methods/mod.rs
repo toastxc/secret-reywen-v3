@@ -127,10 +127,10 @@ pub mod data {
             message_send::DataMessageSend, message_unreact::DataUnreact,
         },
         servers::{
-            ban_create::DataBanReason, ban_list::DataBanList, channel_create::DataChannelCreate,
-            member_edit::DataMemberEdit, member_remove::AllMemberResponse,
-            roles_create::DataRoleCreate, roles_edit::DataEditRole,
-            server_create::DataCreateServer, server_edit::DataEditServer, ban_create::DataBan,
+            ban_create::DataBan, ban_create::DataBanReason, ban_list::DataBanList,
+            channel_create::DataChannelCreate, member_edit::DataMemberEdit,
+            member_remove::AllMemberResponse, roles_create::DataRoleCreate,
+            roles_edit::DataEditRole, server_create::DataCreateServer, server_edit::DataEditServer,
         },
     };
 }

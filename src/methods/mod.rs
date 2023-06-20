@@ -1,7 +1,7 @@
 mod bots;
 mod channels;
 mod corelib;
-pub mod driver;
+
 mod servers;
 mod users;
 
@@ -107,7 +107,30 @@ pub mod server {
 
 pub mod user {
 
-    pub mod incomplete {}
+    pub mod friend {
+        pub use crate::methods::users::add_friend::add_friend as add;
+        pub use crate::methods::users::add_friend::DataFriendRequest;
+        pub use crate::methods::users::remove_friend::remove_friend as remove;
+        pub mod request {
+            pub use crate::methods::users::add_friend::add_friend as create;
+            pub use crate::methods::users::remove_friend::remove_friend as reject;
+        }
+    }
+    pub mod fetch {
+        pub use crate::methods::users::fetch_dms::fetch_dms as dms;
+        pub use crate::methods::users::fetch_profile::fetch_profile as profile;
+        pub use crate::methods::users::fetch_self::fetch_self;
+        pub use crate::methods::users::fetch_user::fetch_user as user;
+        pub use crate::methods::users::fetch_user_flags::fetch_user_flags as flags;
+        pub use crate::methods::users::find_mutual::find_mutual as mutual;
+    }
+    pub use crate::methods::users::change_username::change_username;
+    pub use crate::methods::users::edit_user::edit_user as edit;
+    pub use crate::methods::users::open_dm::open_dm;
+    pub mod block {
+        pub use crate::methods::users::block_user::block_user as create;
+        pub use crate::methods::users::unblock_user::unblock_user as remove;
+    }
 }
 
 pub mod util {
@@ -132,6 +155,8 @@ pub mod data {
             roles_create::DataRoleCreate, roles_edit::DataEditRole,
             server_create::DataCreateServer, server_edit::DataEditServer, ban_create::DataBan,
         },
+        users::add_friend::DataFriendRequest,
+        users::edit_user::DataEditUser,
     };
 }
 
@@ -141,3 +166,5 @@ pub mod response {
         servers::{member_fetch_all::ResponseMemberAll, server_create::CreateServerResponse},
     };
 }
+
+pub mod driver;

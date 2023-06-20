@@ -7,7 +7,7 @@ pub async fn permissions_set(
     http: &Delta,
     channel: &str,
     role_id: &str,
-    data: PermissionData,
+    data: &PermissionData,
 ) -> Result<Channel, DeltaError> {
     result(
         http.put(

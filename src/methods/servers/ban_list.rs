@@ -1,4 +1,7 @@
-use crate::methods::driver::{result, Delta, DeltaError};
+use crate::{
+    methods::driver::{result, Delta, DeltaError},
+    structures::{media::attachment::File, server::server_ban::ServerBan, users::user::User},
+};
 
 pub async fn ban_list(http: &Delta, server: &str) -> Result<DataBanList, DeltaError> {
     result(http.get(&format!("/servers/{server}/bans")).await).await
@@ -6,59 +9,32 @@ pub async fn ban_list(http: &Delta, server: &str) -> Result<DataBanList, DeltaEr
 
 use serde::{Deserialize, Serialize};
 
-#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct DataBanList {
-    pub users: Vec<User>,
-    pub bans: Vec<Ban>,
-}
-
-#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct User {
+#[derive(Serialize, Deserialize, Debug, Clone)]
+struct BannedUser {
+    /// Id of the banned user
     #[serde(rename = "_id")]
     pub id: String,
+    /// Username of the banned user
     pub username: String,
-    pub avatar: Option<Avatar>,
+    /// Avatar of the banned user
+    pub avatar: Option<File>,
 }
 
-#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct Avatar {
-    #[serde(rename = "_id")]
-    pub id: String,
-    pub tag: String,
-    pub filename: String,
-    pub metadata: Metadata,
-    pub content_type: String,
-    pub size: i64,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub deleted: Option<bool>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub reported: Option<bool>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub message_id: Option<bool>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub user_id: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub server_id: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub object_id: Option<String>,
+/// # Ban List Result
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct DataBanList {
+    /// Users objects
+    users: Vec<BannedUser>,
+    /// Ban objects
+    bans: Vec<ServerBan>,
 }
 
-#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct Metadata {
-    #[serde(rename = "type")]
-    pub r#type: String,
-}
-
-#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct Ban {
-    #[serde(rename = "_id")]
-    pub id: Id,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub reason: Option<String>,
-}
-
-#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct Id {
-    pub server: String,
-    pub user: String,
+impl From<User> for BannedUser {
+    fn from(user: User) -> Self {
+        BannedUser {
+            id: user.id,
+            username: user.username,
+            avatar: user.avatar,
+        }
+    }
 }

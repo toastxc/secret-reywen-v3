@@ -10,8 +10,8 @@ pub async fn ban_create(
     http: &Delta,
     server: &str,
     user: &str,
-    reason: DataBanReason,
-) -> Result<Ban, DeltaError> {
+    reason: &DataBanReason,
+) -> Result<DataBan, DeltaError> {
     let data = serde_json::to_string(&reason).unwrap();
     result(
         http.put(&format!("/servers/{server}/bans/{user}"), Some(&data))
@@ -21,7 +21,7 @@ pub async fn ban_create(
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
-pub struct Ban {
+pub struct DataBan {
     pub _id: BanId,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub reason: Option<String>,

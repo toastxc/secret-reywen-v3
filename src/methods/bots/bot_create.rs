@@ -6,8 +6,8 @@ use crate::{
 };
 
 
+pub async fn bot_create(http: &Delta, data: &DataCreateBot) -> Result<Bot, DeltaError> {
 
-pub async fn bot_create(http: &Delta, data: DataCreateBot) -> Result<Bot, DeltaError> {
     result(
         http.post(
             &format!("/bots/create"),

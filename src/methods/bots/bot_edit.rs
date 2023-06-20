@@ -5,7 +5,7 @@ use crate::{
     structures::users::bot::{Bot, FieldsBot},
 };
 
-pub async fn bot_edit(http: &Delta, bot_id: &str, data: DataEditBot) -> Result<Bot, DeltaError> {
+pub async fn bot_edit(http: &Delta, bot_id: &str, data: &DataEditBot) -> Result<Bot, DeltaError> {
     result(
         http.patch(
             &format!("/bots/{bot_id}"),

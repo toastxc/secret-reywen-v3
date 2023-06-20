@@ -6,7 +6,7 @@ use crate::{
 pub async fn permissions_set_default(
     http: &Delta,
     channel: &str,
-    data: PermissionData,
+    data: &PermissionData,
     is_group: bool,
 ) -> Result<Channel, DeltaError> {
     let newdata = match is_group {

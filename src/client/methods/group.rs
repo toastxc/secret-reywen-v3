@@ -1,16 +1,37 @@
-use crate::methods::driver::{result, Delta, DeltaError};
-use crate::structures::channels::channel::Channel;
+use reywen_http::results::{result, DeltaError};
 use serde::{Deserialize, Serialize};
 
-pub async fn group_create(http: &Delta, data: &DataCreateGroup) -> Result<Channel, DeltaError> {
-    result(
-        http.post(
-            &format!("channels/create"),
-            Some(&serde_json::to_string(&data).unwrap()),
+use crate::{client::Client, structures::channels::channel::Channel};
+
+impl Client {
+    pub async fn group_member_add(&self, group: &str, member: &str) -> Result<(), DeltaError> {
+        result(
+            self.http
+                .put(&format!("/channels/{group}/recipients/{member}"), None)
+                .await,
         )
-        .await,
-    )
-    .await
+        .await
+    }
+
+    pub async fn group_create(&self, data: &DataCreateGroup) -> Result<Channel, DeltaError> {
+        result(
+            self.http
+                .post(
+                    &format!("channels/create"),
+                    Some(&serde_json::to_string(&data).unwrap()),
+                )
+                .await,
+        )
+        .await
+    }
+    pub async fn group_member_remove(&self, channel: &str, member: &str) -> Result<(), DeltaError> {
+        result(
+            self.http
+                .delete(&format!("/channels/{channel}/recipients/{member}"), None)
+                .await,
+        )
+        .await
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]

@@ -1,4 +1,5 @@
-use crate::methods::driver::Delta;
+use reywen_http::driver::Delta;
+
 pub const SERVER: &str = "01GKWVWGHN242DVWG4BKXG2C7F";
 pub const USER: &str = "01GXF9E5H7K6BSJ6Q9QGWYRVWD";
 pub const ROLE: &str = "01GXFR9FPEPFY188X5MKV2E8ZN";

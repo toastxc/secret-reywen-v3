@@ -25,9 +25,7 @@ impl Permissions {
     }
 
     pub fn new() -> Self {
-
-            Default::default()
-
+        Default::default()
     }
 
     pub fn export(&self) -> PermissionData {

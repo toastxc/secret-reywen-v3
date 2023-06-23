@@ -1,18 +1,48 @@
-use crate::methods::driver::{result, Delta, DeltaError};
-use crate::structures::channels::channel::{Channel, FieldsChannel};
+use reywen_http::results::{result, DeltaError};
 use serde::{Deserialize, Serialize};
 
-pub async fn channel_edit(
-    http: &Delta,
-    channel: &str,
-    edit_data: &DataEditChannel,
-) -> Result<Channel, DeltaError> {
-    let data = serde_json::to_string(edit_data).unwrap();
-    result(
-        http.patch(&format!("/channels/{channel}"), Some(&data))
-            .await,
-    )
-    .await
+use crate::{
+    client::Client,
+    structures::channels::{
+        channel::{Channel, FieldsChannel},
+        channel_invite::Invite,
+    },
+};
+
+impl Client {
+    pub async fn channel_delete(&self, channel: &str) -> Result<(), DeltaError> {
+        result(
+            self.http
+                .delete(&format!("/channels/{channel}"), None)
+                .await,
+        )
+        .await
+    }
+    pub async fn channel_edit(
+        &self,
+        channel: &str,
+        edit_data: &DataEditChannel,
+    ) -> Result<Channel, DeltaError> {
+        let data = serde_json::to_string(edit_data).unwrap();
+        result(
+            self.http
+                .patch(&format!("/channels/{channel}"), Some(&data))
+                .await,
+        )
+        .await
+    }
+    pub async fn channel_fetch(&self, channel: &str) -> Result<Channel, DeltaError> {
+        result(self.http.get(&format!("/channels/{channel}")).await).await
+    }
+
+    pub async fn channel_invite_create(&self, channel: &str) -> Result<Invite, DeltaError> {
+        result(
+            self.http
+                .post(&format!("/channels/{channel}/invites"), None)
+                .await,
+        )
+        .await
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]

@@ -1,9 +1,13 @@
 mod bots;
 mod channels;
-mod corelib;
+
 pub mod driver;
 mod servers;
 mod users;
+
+pub mod corelib {
+    pub use reywen_http::utils::*;
+}
 
 pub mod channel {
     pub use crate::methods::channels::{
@@ -111,7 +115,8 @@ pub mod user {
 }
 
 pub mod util {
-    pub use crate::methods::corelib::*;
+
+    pub use reywen_http::utils::*;
 }
 
 pub mod data {

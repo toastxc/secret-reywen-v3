@@ -3,7 +3,7 @@ use std::pin::Pin;
 use futures_util::{Stream, StreamExt};
 use tokio_tungstenite::{connect_async, WebSocketStream};
 
-use super::{data::WebSocketEvent, data::Websocket};
+use super::{data::WebSocketEvent, Websocket};
 
 impl Websocket {
     pub async fn stream(input: Connection) -> Pin<Box<impl Stream<Item = WebSocketEvent>>> {

@@ -1,17 +1,21 @@
 #[cfg(test)]
 mod tests {
-    use crate::websocket::data::Websocket;
+    use futures_util::StreamExt;
 
+    use crate::websocket::{data::WebSocketEvent, Websocket};
+
+    // test of reywenv3 websocket owo
     #[tokio::test]
-    async fn websocket() {
-        let ws = Websocket::from_token("");
+    pub async fn test() {
+        let input = Websocket::from_token("");
+        // generate a websocket connection AND convert types
+        let mut ws = input.to_owned().start().await;
 
-        match Websocket::ws_handler(ws).await {
-            Ok(_) => {
-                println!("()")
-            }
-            Err(error) => {
-                println!("{:#?}", error)
+        // for every message
+        while let Some(item) = ws.next().await {
+            // if the event is a message
+            if let WebSocketEvent::Message { .. } = item {
+                println!("yipeee!")
             }
         }
     }

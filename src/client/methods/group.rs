@@ -1,7 +1,10 @@
 use reywen_http::results::{result, DeltaError};
 use serde::{Deserialize, Serialize};
 
-use crate::{client::Client, structures::channels::channel::Channel};
+use crate::{
+    client::Client,
+    structures::{channels::channel::Channel, users::user::User},
+};
 
 impl Client {
     pub async fn group_member_add(&self, group: &str, member: &str) -> Result<(), DeltaError> {
@@ -31,6 +34,10 @@ impl Client {
                 .await,
         )
         .await
+    }
+
+    pub async fn group_member_fetch_all(&self, channel: &str) -> Result<Vec<User>, DeltaError> {
+        result(self.http.get(&format!("/channels/{channel}/members")).await).await
     }
 }
 

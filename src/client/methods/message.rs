@@ -25,9 +25,9 @@ impl Client {
     pub async fn message_bulk_delete(
         &self,
         channel: &str,
-        messages: &Vec<&str>,
+        messages: &DataBulkDelete,
     ) -> Result<(), DeltaError> {
-        let data = serde_json::to_string(messages).res()?;
+        let data = serde_json::to_string(messages).unwrap();
         result(
             self.http
                 .delete(&format!("/channels/{channel}/messages/bulk"), Some(&data))
@@ -35,7 +35,7 @@ impl Client {
         )
         .await
     }
-    pub async fn message_clear_reactions(
+    pub async fn message_reaction_remove_all(
         &self,
         channel: &str,
         message: &str,
@@ -101,7 +101,7 @@ impl Client {
         )
         .await
     }
-    pub async fn message_react(
+    pub async fn message_reaction_add(
         &self,
         channel: &str,
         message: &str,
@@ -144,7 +144,7 @@ impl Client {
         )
         .await
     }
-    pub async fn message_unreact(
+    pub async fn message_reaction_remove(
         &self,
         channel: &str,
         message: &str,

@@ -1,8 +1,8 @@
 use reywen_http::{driver::Delta, results::DeltaError};
 
-use crate::websocket::data::Websocket;
+use crate::websocket::Websocket;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct Client {
     pub http: Delta,
     pub websocket: Websocket,
@@ -27,6 +27,9 @@ impl Client {
             websocket: Websocket::from_token(token),
             token: String::from(token),
         })
+    }
+    pub fn new() -> Self {
+        Default::default()
     }
 }
 

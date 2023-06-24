@@ -15,7 +15,7 @@ impl Client {
         &self,
         server: &str,
         role_id: &str,
-        data: PermissionData,
+        data: &PermissionData,
     ) -> Result<Server, DeltaError> {
         result(
             self.http
@@ -30,7 +30,7 @@ impl Client {
     pub async fn server_permission_set_default(
         &self,
         server: &str,
-        data: PermissionData,
+        data: &PermissionData,
     ) -> Result<Server, DeltaError> {
         result(
             self.http
@@ -45,7 +45,7 @@ impl Client {
     pub async fn roles_create(
         &self,
         server: &str,
-        data: DataRoleCreate,
+        data: &DataRoleCreate,
     ) -> Result<NewRoleResponse, DeltaError> {
         result(
             self.http
@@ -70,7 +70,7 @@ impl Client {
         &self,
         server: &str,
         role_id: &str,
-        data: DataEditRole,
+        data: &DataEditRole,
     ) -> Result<Role, DeltaError> {
         result(
             self.http

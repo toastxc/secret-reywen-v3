@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use crate::{
     client::Client,
     structures::{
-        channels::channel::Channel,
+        channels::{channel::Channel, channel_invite::Invite},
         media::attachment::File,
         server::{
             server::{Category, FieldsServer, Server, SystemMessageChannels},
@@ -20,7 +20,7 @@ impl Client {
     }
     pub async fn server_create(
         &self,
-        data: DataCreateServer,
+        data: &DataCreateServer,
     ) -> Result<CreateServerResponse, DeltaError> {
         result(
             self.http
@@ -39,7 +39,7 @@ impl Client {
     pub async fn server_edit(
         &self,
         server: &str,
-        data: DataEditServer,
+        data: &DataEditServer,
     ) -> Result<Server, DeltaError> {
         result(
             self.http
@@ -85,7 +85,7 @@ impl Client {
     pub async fn channel_create(
         &self,
         server: &str,
-        data: DataChannelCreate,
+        data: &DataChannelCreate,
     ) -> Result<Channel, DeltaError> {
         result(
             self.http
@@ -96,6 +96,10 @@ impl Client {
                 .await,
         )
         .await
+    }
+
+    pub async fn invites_fetch(&self, server: &str) -> Result<Vec<Invite>, DeltaError> {
+        result(self.http.get(&format!("/servers/{server}/invites")).await).await
     }
 }
 
@@ -224,9 +228,20 @@ impl DataEditServer {
     }
 }
 
-#[derive(Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct DataBanReason {
     pub reason: Option<String>,
+}
+
+impl DataBanReason {
+    pub fn new(reason: &str) -> Self {
+        Self {
+            reason: Some(String::from(reason)),
+        }
+    }
+    pub fn none() -> Self {
+        Self { reason: None }
+    }
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]

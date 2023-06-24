@@ -11,7 +11,7 @@ impl Client {
         &self,
         server: &str,
         member: &str,
-        data: DataMemberEdit,
+        data: &DataMemberEdit,
     ) -> Result<DataMemberEdit, DeltaError> {
         result(
             self.http

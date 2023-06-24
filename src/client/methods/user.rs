@@ -10,7 +10,7 @@ use crate::{
 };
 
 impl Client {
-    pub async fn edit_user(&self, user: &str, data: DataEditUser) -> Result<User, DeltaError> {
+    pub async fn user_edit(&self, user: &str, data: DataEditUser) -> Result<User, DeltaError> {
         let data = serde_json::to_string(&data).unwrap();
 
         result(self.http.patch(&format!("users/{user}"), Some(&data)).await).await
@@ -26,31 +26,11 @@ impl Client {
         result(self.http.get(&format!("users/{user}/mutual")).await).await
     }
 
-    pub async fn friend_add(&self, username: &str) -> Result<User, DeltaError> {
-        let data = serde_json::to_string(
-            &(DataFriendRequest {
-                username: String::from(username),
-            }),
-        )
-        .unwrap();
-
-        result(self.http.post("users/friend", Some(&data)).await).await
-    }
-
     pub async fn user_fetch_self(&self) -> Result<User, DeltaError> {
         result(self.http.get("users/@me").await).await
     }
 
-    pub async fn friend_remove(&self, user: &str) -> Result<User, DeltaError> {
-        result(
-            self.http
-                .delete(&format!("users/{user}/friend"), None)
-                .await,
-        )
-        .await
-    }
-
-    pub async fn user_unblock(&self, user: &str) -> Result<User, DeltaError> {
+    pub async fn user_block_remove(&self, user: &str) -> Result<User, DeltaError> {
         result(
             self.http
                 .delete(&format!("/users/{user}/block"), None)
@@ -58,25 +38,15 @@ impl Client {
         )
         .await
     }
-    pub async fn friend_request_send(
-        &self,
-        data: DataSendFriendRequest,
-    ) -> Result<User, DeltaError> {
-        result(
-            self.http
-                .post("users/friend", Some(&serde_json::to_string(&data).unwrap()))
-                .await,
-        )
-        .await
-    }
+
     pub async fn dm_open(&self, user: &str) -> Result<Channel, DeltaError> {
         result(self.http.get(&format!("users/{user}/dm")).await).await
     }
 
-    pub async fn dms_fetch(&self) -> Result<Vec<Channel>, DeltaError> {
+    pub async fn dm_fetch_all(&self) -> Result<Vec<Channel>, DeltaError> {
         result(self.http.get("users/friend").await).await
     }
-    pub async fn get_default_avatar(&self, user: &str) -> Result<String, DeltaError> {
+    pub async fn default_avatar_fetch(&self, user: &str) -> Result<String, DeltaError> {
         result(self.http.get(&format!("users/{user}/default_avatar")).await).await
     }
     pub async fn user_flags_fetch(&self, user: &str) -> Result<ResponseFlag, DeltaError> {
@@ -85,6 +55,36 @@ impl Client {
 
     pub async fn user_block(&self, user: &str) -> Result<User, DeltaError> {
         result(self.http.post(&format!("/users/{user}/block"), None).await).await
+    }
+
+    pub async fn friend_request_send(&self, username: &str) -> Result<User, DeltaError> {
+        result(
+            self.http
+                .post(
+                    &format!("/users/friend"),
+                    Some(
+                        &serde_json::to_string(&DataSendFriendRequest::set_username(username))
+                            .unwrap(),
+                    ),
+                )
+                .await,
+        )
+        .await
+    }
+    pub async fn friend_request_accept(&self, user: &str) -> Result<User, DeltaError> {
+        result(self.http.put(&format!("/users/{user}/friend"), None).await).await
+    }
+
+    pub async fn friend_request_reject(&self, user: &str) -> Result<User, DeltaError> {
+        result(
+            self.http
+                .delete(&format!("/users/{user}/friend"), None)
+                .await,
+        )
+        .await
+    }
+    pub async fn friend_remove(&self, user: &str) -> Result<User, DeltaError> {
+        self.friend_request_reject(user).await
     }
 }
 
@@ -98,11 +98,6 @@ impl DataSendFriendRequest {
             username: String::from(username),
         }
     }
-}
-
-#[derive(Serialize, Debug, Clone, Default)]
-pub struct DataFriendRequest {
-    username: String,
 }
 
 //https://api.revolt.chat/users/{target}

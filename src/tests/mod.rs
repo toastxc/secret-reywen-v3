@@ -1,6 +1,5 @@
 pub mod bots;
 pub mod channels;
-pub mod common;
 pub mod servers;
 pub mod users;
 pub mod websocket;
@@ -17,29 +16,38 @@ pub const GROUP: &str = "01GYM0JBNKWRJYX56F9GYABS4R";
 pub const BOT: &str = "01GXF9E5H7K6BSJ6Q9QGWYRVWD";
 // enter values here for testing
 
-fn tester_bot() -> Delta {
-    Delta::new()
-        .set_url("https://api.revolt.chat/")
-        .add_header("x-bot-token", include_str!("bot-token.txt"))
-        .unwrap()
-        .set_timeout(10)
+pub fn tester_bot() -> Client {
+    test_client(false)
 }
 
-fn tester_user() -> Delta {
-    Delta::new()
-        .set_url("https://api.revolt.chat/")
-        .add_header("x-session-token", include_str!("self-token.txt"))
-        .unwrap()
-        .set_timeout(10)
+pub fn tester_user() -> Client {
+    test_client(false)
 }
 
-pub async fn test_client(is_bot: bool) -> Client {
+fn bot_or(is_bot: bool) -> (String, String) {
+    if is_bot {
+        (
+            String::from("x-bot-token"),
+            include_str!("bot-token.txt").to_string(),
+        )
+    } else {
+        (
+            String::from("x-session-token"),
+            include_str!("self-token.txt").to_string(),
+        )
+    }
+}
+
+pub fn test_client(is_bot: bool) -> Client {
+    let auth = bot_or(is_bot);
     let mut client = Client::new();
+    let http = Delta::new()
+        .set_url("https://api.revolt.chat/")
+        .add_header(&auth.0, &auth.1)
+        .unwrap()
+        .set_timeout(10);
 
-    client.http = match is_bot {
-        true => tester_bot(),
-        false => tester_user(),
-    };
+    client.http = http;
 
     client
 }

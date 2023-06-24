@@ -1,6 +1,5 @@
 use reywen_http::{
     results::{result, DeltaError},
-    traits::ErrorConvert,
     utils::struct_to_url,
 };
 use serde::{Deserialize, Serialize};

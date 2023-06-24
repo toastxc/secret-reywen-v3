@@ -2,7 +2,6 @@ pub mod data;
 pub mod process;
 pub mod result;
 
-
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Deserialize, Serialize, Default)]

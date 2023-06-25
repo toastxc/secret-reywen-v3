@@ -146,6 +146,27 @@ pub struct Message {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub masquerade: Option<Masquerade>,
 }
+
+impl Message {
+    pub fn content_is(&self, input: &str) -> bool {
+        self.content.to_owned().unwrap_or_default().as_str() == input
+    }
+    pub fn content_contains(&self, search: &str, split_by: &str) -> Option<Vec<String>> {
+        if let Some(content) = self.content.as_ref() {
+            let split_content = content.split(split_by).collect::<Vec<&str>>();
+            let mut new = Vec::new();
+            split_content.iter().for_each(|item| new.push(item.to_string()));
+
+            if split_content.contains(&search) {
+                return Some(new);
+            }
+            None
+        } else {
+            None
+        }
+    }
+}
+
 /// # Message Sort
 ///
 /// Sort used for retrieving messages

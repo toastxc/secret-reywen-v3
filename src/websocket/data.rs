@@ -19,6 +19,7 @@ pub enum Ping {
     Binary(Vec<u8>),
     Number(usize),
 }
+
 #[derive(Deserialize, Serialize, Debug, Clone)]
 #[serde(tag = "type")]
 pub enum WebSocketEvent {

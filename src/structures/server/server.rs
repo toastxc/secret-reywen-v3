@@ -1,10 +1,11 @@
 use std::collections::HashMap;
 
 use num_enum::TryFromPrimitive;
+use reywen_http::utils::if_false;
 //use num_enum::TryFromPrimitive;
 use serde::{Deserialize, Serialize};
 
-use crate::{methods::util::if_false, structures::media::attachment::File};
+use crate::structures::media::attachment::File;
 
 /// Representation of a server role
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]

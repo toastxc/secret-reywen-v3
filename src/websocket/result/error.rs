@@ -6,7 +6,7 @@ pub enum WSError {
     Tungstenite(tungstenite::Error),
     Data(DataError),
     Connection(std::io::Error),
-    Watchdog(WatchdogError)
+    Watchdog(WatchdogError),
 }
 #[derive(Debug)]
 pub enum DataError {

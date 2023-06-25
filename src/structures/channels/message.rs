@@ -1,13 +1,11 @@
 use iso8601_timestamp::Timestamp;
+use reywen_http::utils::if_false;
 use serde::{Deserialize, Serialize};
 
-use crate::{
-    methods::util::if_false,
-    structures::{
-        media::{attachment::File, embeds::Embed},
-        server::server_member::Member,
-        users::user::User,
-    },
+use crate::structures::{
+    media::{attachment::File, embeds::Embed},
+    server::server_member::Member,
+    users::user::User,
 };
 
 #[derive(Serialize, Deserialize, Clone, Debug, Default)]
@@ -55,7 +53,7 @@ pub enum SystemMessage {
 }
 
 /// Name and / or avatar override information
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Masquerade {
     /// Replace the display name shown on this message
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -69,6 +67,29 @@ pub struct Masquerade {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub colour: Option<String>,
 }
+
+impl Masquerade {
+    pub fn set_name(&mut self, name: &str) -> Self {
+        self.name = Some(String::from(name));
+        self.to_owned()
+    }
+    pub fn set_avatar(&mut self, avatar: &str) -> Self {
+        self.avatar = Some(String::from(avatar));
+        self.to_owned()
+    }
+    pub fn set_color(&mut self, color: &str) -> Self {
+        self.colour = Some(String::from(color));
+        self.to_owned()
+    }
+    pub fn set_colour(&mut self, color: &str) -> Self {
+        self.colour = Some(String::from(color));
+        self.to_owned()
+    }
+    pub fn new() -> Self {
+        Default::default()
+    }
+}
+
 /// Information to guide interactions on this message
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Interactions {
@@ -125,6 +146,29 @@ pub struct Message {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub masquerade: Option<Masquerade>,
 }
+
+impl Message {
+    pub fn content_is(&self, input: &str) -> bool {
+        self.content.to_owned().unwrap_or_default().as_str() == input
+    }
+    pub fn content_contains(&self, search: &str, split_by: &str) -> Option<Vec<String>> {
+        if let Some(content) = self.content.as_ref() {
+            let split_content = content.split(split_by).collect::<Vec<&str>>();
+            let mut new = Vec::new();
+            split_content
+                .iter()
+                .for_each(|item| new.push(item.to_string()));
+
+            if split_content.contains(&search) {
+                return Some(new);
+            }
+            None
+        } else {
+            None
+        }
+    }
+}
+
 /// # Message Sort
 ///
 /// Sort used for retrieving messages

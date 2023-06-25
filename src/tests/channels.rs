@@ -1,47 +1,57 @@
 #[cfg(test)]
 mod tests {
     use crate::{
-        methods::{channel, data::*, group, message, permissions},
+        client::methods::{
+            channel::DataEditChannel,
+            group::DataCreateGroup,
+            message::{
+                DataBulkDelete, DataEditMessage, DataMessageSearch, DataMessageSend,
+                DataQueryMessages, DataUnreact,
+            },
+        },
         structures::permissions::{calculator::Permissions, definitions::Permission},
-        tests::common::*,
+        tests::{tester_bot, tester_user, CHANNEL, GROUP},
     };
 
     #[tokio::test]
     async fn test_delete_channel() {
-        let http = tester_bot().await;
+        let client = tester_bot();
 
-        if let Err(error) = channel::delete(&http, "01GXDMSSJTXB14EA7J4R77B778").await {
+        if let Err(error) = client.channel_delete(&"01GXDMSSJTXB14EA7J4R77B778").await {
             panic!("{:#?}", error);
         }
     }
 
     #[tokio::test]
     async fn test_channel_edit() {
-        let http = tester_bot().await;
+        let client = tester_bot();
 
         let data = DataEditChannel::new()
             .set_name("benis")
             .set_description("wenis");
 
-        if let Err(error) = channel::edit(&http, CHANNEL, &data).await {
+        if let Err(error) = client.channel_edit(&CHANNEL, &data).await {
             panic!("{:#?}", error);
         }
     }
 
     #[tokio::test]
     async fn test_channel_fetch() {
-        let http = tester_bot().await;
+        let client = tester_bot();
 
-        if let Err(error) = channel::fetch(&http, CHANNEL).await {
+        if let Err(error) = client.channel_fetch(&CHANNEL).await {
             panic!("{:#?}", error);
         }
     }
 
     #[tokio::test]
     async fn group_add_member() {
-        let http = tester_user().await;
+        let client = tester_user();
 
-        if let Err(error) = group::members::add(&http, GROUP, "01FQ6SDAVSV5X1B4A7JXNB4FZV").await {
+        if let Err(error) = client
+            .group_member_add(&GROUP, &"01FQ6SDAVSV5X1B4A7JXNB4FZV")
+            .await
+        {
             panic!("{:#?}", error);
         }
     }
@@ -49,28 +59,25 @@ mod tests {
     // todo does not work
     #[tokio::test]
     async fn test_create_group() {
-        let http = tester_user().await;
+        let client = tester_user();
 
         let data = DataCreateGroup::new("womp")
             .add_user("01FQ6SDAVSV5X1B4A7JXNB4FZV")
             .set_nsfw(false);
 
         println!("{:#?}", data);
-        if let Err(error) = group::create(&http, &data).await {
+        if let Err(error) = client.group_create(&data).await {
             panic!("{:#?}", error);
         }
     }
 
     #[tokio::test]
     async fn test_group_remove_member() {
-        let http = tester_user().await;
+        let client = tester_user();
 
-        if let Err(error) = group::members::remove(
-            &http,
-            "01GYM0JBNKWRJYX56F9GYABS4R",
-            "01FQ6SDAVSV5X1B4A7JXNB4FZV",
-        )
-        .await
+        if let Err(error) = client
+            .group_member_remove("01GYM0JBNKWRJYX56F9GYABS4R", "01FQ6SDAVSV5X1B4A7JXNB4FZV")
+            .await
         {
             panic!("{:#?}", error);
         }
@@ -78,47 +85,51 @@ mod tests {
 
     #[tokio::test]
     async fn test_invite_create() {
-        let http = tester_user().await;
+        let client = tester_user();
 
-        if let Err(error) = channel::invite::create(&http, CHANNEL).await {
+        if let Err(error) = client.channel_invite_create(&CHANNEL).await {
             panic!("{:#?}", error);
         }
     }
 
     #[tokio::test]
     async fn test_member_fetch() {
-        let http = tester_bot().await;
+        let client = tester_user();
 
-        if let Err(error) = group::members::fetch(&http, CHANNEL).await {
+        if let Err(error) = client.group_member_fetch_all(&CHANNEL).await {
             panic!("{:#?}", error);
         }
     }
 
     #[tokio::test]
     async fn test_message_ack() {
-        let http = tester_user().await;
+        let client = tester_user();
 
-        if let Err(error) = message::ack(&http, CHANNEL, "01GYMBW4XV6TF3199RVFXWWVQ7").await {
+        if let Err(error) = client
+            .message_ack(&CHANNEL, "01GYMBW4XV6TF3199RVFXWWVQ7")
+            .await
+        {
             panic!("{:#?}", error);
         }
     }
 
     #[tokio::test]
     async fn test_message_bulk_delete() {
-        let http = tester_bot().await;
+        let client = tester_bot();
 
         let data = DataBulkDelete::new().add_message("01GYMCHDB9Q1ETS4KP9NG1WW32");
-        if let Err(error) = message::bulk_delete(&http, CHANNEL, &data).await {
+        if let Err(error) = client.message_bulk_delete(&CHANNEL, &data).await {
             panic!("{:#?}", error);
         }
     }
 
     #[tokio::test]
     async fn test_message_clear_reactions() {
-        let http = tester_bot().await;
+        let client = tester_bot();
 
-        if let Err(error) =
-            message::reaction::clear(&http, CHANNEL, "01GYMCHDB9WRYN8WEVG25FESVS").await
+        if let Err(error) = client
+            .message_reaction_remove_all(&CHANNEL, "01GYMCHDB9WRYN8WEVG25FESVS")
+            .await
         {
             panic!("{:#?}", error);
         }
@@ -126,27 +137,27 @@ mod tests {
 
     #[tokio::test]
     async fn test_message_delete() {
-        let http = tester_bot().await;
+        let client = tester_user();
 
         let create_result_data = DataMessageSend::new().set_content("reywen_test");
-        let create_result = message::send(&http, CHANNEL, &create_result_data).await;
+        let create_result = client.message_send(&CHANNEL, &create_result_data).await;
 
         if let Err(error) = create_result {
             panic!("create message failed (required for test) {:#?}", error);
         }
 
         let cr_data = create_result.ok().unwrap();
-        if let Err(error) = message::delete(&http, CHANNEL, cr_data.id.as_str()).await {
+        if let Err(error) = client.message_delete(&CHANNEL, cr_data.id.as_str()).await {
             panic!("delete message failed {:#?}", error);
         }
     }
 
     #[tokio::test]
     async fn test_message_edit() {
-        let http = tester_bot().await;
+        let client = tester_bot();
 
         let original_message_data = DataMessageSend::new().set_content("original content");
-        let original_message = message::send(&http, CHANNEL, &original_message_data).await;
+        let original_message = client.message_send(&CHANNEL, &original_message_data).await;
 
         if let Err(error) = original_message {
             panic!("create message failed (required for test) {:#?}", error);
@@ -154,13 +165,13 @@ mod tests {
 
         let original_message_success = original_message.ok().unwrap();
         let edit_message_data = DataEditMessage::new().content("edited content");
-        if let Err(error) = message::edit(
-            &http,
-            CHANNEL,
-            original_message_success.id.as_str(),
-            &edit_message_data,
-        )
-        .await
+        if let Err(error) = client
+            .message_edit(
+                &CHANNEL,
+                original_message_success.id.as_str(),
+                &edit_message_data,
+            )
+            .await
         {
             panic!("edit message failed {:#?}", error);
         }
@@ -168,44 +179,43 @@ mod tests {
 
     #[tokio::test]
     async fn test_message_fetch() {
-        let http = tester_bot().await;
-
+        let client = tester_user();
         let original_message_data = DataMessageSend::new().set_content("fetch test");
-        let original_message = message::send(&http, CHANNEL, &original_message_data).await;
+        let original_message = client.message_send(&CHANNEL, &original_message_data).await;
 
         if let Err(error) = original_message {
             panic!("create message failed (required for test) {:#?}", error);
         }
 
         let og_succ = original_message.ok().unwrap();
-        if let Err(error) = message::fetch(&http, CHANNEL, og_succ.id.as_str()).await {
+        if let Err(error) = client.message_fetch(&CHANNEL, og_succ.id.as_str()).await {
             panic!("fetch message failed {:#?}", error);
         }
     }
 
     #[tokio::test]
     async fn test_message_query() {
-        let http = tester_user().await;
+        let client = tester_user();
 
         let data = DataQueryMessages::new()
             .set_limit(24)
             .set_include_users(true);
-        if let Err(error) = message::query(&http, CHANNEL, &data).await {
+        if let Err(error) = client.message_query(&CHANNEL, &data).await {
             panic!("{:#?}", error);
         }
     }
 
     #[tokio::test]
     async fn test_emoji_react() {
-        let http = tester_user().await;
+        let client = tester_user();
 
-        if let Err(error) = message::react(
-            &http,
-            CHANNEL,
-            "01GYP3PB8VBS6B6DE9YVRK8C69",
-            "01G83M8KJE4KGQCQT2PP5EH3VT",
-        )
-        .await
+        if let Err(error) = client
+            .message_reaction_add(
+                CHANNEL,
+                "01GYP3PB8VBS6B6DE9YVRK8C69",
+                "01G83M8KJE4KGQCQT2PP5EH3VT",
+            )
+            .await
         {
             panic!("{:#?}", error);
         }
@@ -213,37 +223,37 @@ mod tests {
 
     #[tokio::test]
     async fn test_message_search() {
-        let http = tester_user().await;
+        let client = tester_user();
 
         let data = DataMessageSearch::new("womp").set_include_users(true);
-        if let Err(error) = message::search(&http, CHANNEL, &data).await {
+        if let Err(error) = client.message_search(&CHANNEL, &data).await {
             panic!("{:#?}", error);
         }
     }
 
     #[tokio::test]
     async fn test_message_send() {
-        let http = tester_user().await;
+        let client = tester_user();
 
         let data = DataMessageSend::new().set_content("womo");
-        if let Err(error) = message::send(&http, CHANNEL, &data).await {
+        if let Err(error) = client.message_send(&CHANNEL, &data).await {
             panic!("{:#?}", error);
         }
     }
 
     #[tokio::test]
     async fn test_message_unreact() {
-        let http = tester_user().await;
+        let client = tester_user();
 
         let data = DataUnreact::new();
-        if let Err(error) = message::reaction::unreact(
-            &http,
-            CHANNEL,
-            "01GYP6KM9C51XFQNG13ANR4PT1",
-            "01GQE86CT9MKAHPTG55HMTG7TR",
-            data,
-        )
-        .await
+        if let Err(error) = client
+            .message_reaction_remove(
+                &CHANNEL,
+                "01GYP6KM9C51XFQNG13ANR4PT1",
+                "01GQE86CT9MKAHPTG55HMTG7TR",
+                &data,
+            )
+            .await
         {
             panic!("{:#?}", error);
         }
@@ -251,18 +261,18 @@ mod tests {
 
     #[tokio::test]
     async fn test_permission_set() {
-        let http = tester_user().await;
+        let client = tester_user();
         let data = Permissions::default()
             .add_allow(Permission::ViewChannel)
             .add_allow(Permission::KickMembers);
 
-        if let Err(error) = permissions::channel::set(
-            &http,
-            "01GKWVWGHNBNCFPC9Q7CRDHBVZ",
-            "01GXFR9FPEPFY188X5MKV2E8ZN",
-            data.export(),
-        )
-        .await
+        if let Err(error) = client
+            .channel_permissions_set(
+                "01GKWVWGHNBNCFPC9Q7CRDHBVZ",
+                "01GXFR9FPEPFY188X5MKV2E8ZN",
+                &data.export(),
+            )
+            .await
         {
             panic!("{:#?}", error);
         }
@@ -270,7 +280,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_permissions_set_default() {
-        let http = tester_user().await;
+        let client = tester_user();
 
         let data = Permissions::default()
             .add_allow(Permission::ViewChannel)
@@ -279,32 +289,11 @@ mod tests {
 
         println!("{:#?}", data);
 
-        if let Err(error) =
-            permissions::channel::set_default(&http, "01GXDKYV0P4T6DHNNG7M15CQ5R", data, false)
-                .await
+        if let Err(error) = client
+            .channel_permissions_set_default("01GXDKYV0P4T6DHNNG7M15CQ5R", &data, false)
+            .await
         {
             panic!("{:#?}", error);
         }
     }
 }
-
-/*
-
-
-
-    TEMPALTE
-
-
- #[tokio::test]
-    async fn test_template() {
-        let http = tester().await;
-
-        if let Err(error) =
-            template::template(&http, CHANNEL).await
-        {
-            panic!("{:#?}", error);
-        }
-    }
-
-
-*/

@@ -1,6 +1,7 @@
+use reywen_http::utils::if_false;
 use serde::{Deserialize, Serialize};
 
-use crate::{methods::util::if_false, structures::media::attachment::File};
+use crate::structures::media::attachment::File;
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct PublicBot {

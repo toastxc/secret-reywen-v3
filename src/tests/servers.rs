@@ -1,140 +1,139 @@
 #[cfg(test)]
 mod tests {
-
     use crate::{
-        methods::{
-            data::*,
-            permissions,
-            server::{self, member},
+        client::methods::{
+            member::DataMemberEdit,
+            permissions::{DataEditRole, DataRoleCreate},
+            server::{DataBanReason, DataChannelCreate, DataCreateServer, DataEditServer},
         },
         structures::permissions::{calculator::Permissions, definitions::Permission},
-        tests::common::{tester_bot, ROLE, SERVER, USER},
+        tests::{tester_bot, tester_user, ROLE, SERVER, USER},
     };
 
     #[tokio::test]
     async fn test_member_edit() {
-        let http = tester_bot().await;
+        let client = tester_bot();
 
         let data = DataMemberEdit::default();
 
-        if let Err(curl) = member::edit(&http, SERVER, USER, data).await {
+        if let Err(curl) = client.member_edit(&SERVER, &USER, &data).await {
             panic!("{:#?}", curl);
         }
     }
 
     #[tokio::test]
     async fn test_member_remove() {
-        let http = tester_bot().await;
+        let client = tester_bot();
 
-        if let Err(curl) = member::remove(&http, SERVER, USER).await {
+        if let Err(curl) = client.member_remove(&SERVER, &USER).await {
             panic!("{:#?}", curl);
         }
     }
 
     #[tokio::test]
     async fn test_member_fetch() {
-        let http = tester_bot().await;
+        let client = tester_bot();
 
-        if let Err(curl) = member::fetch::one(&http, SERVER, USER).await {
+        if let Err(curl) = client.member_fetch(&SERVER, &USER).await {
             panic!("{:#?}", curl);
         }
     }
     #[tokio::test]
     async fn test_member_fetch_all() {
-        let http = tester_bot().await;
+        let client = tester_bot();
 
-        if let Err(curl) = member::fetch::all(&http, SERVER).await {
+        if let Err(curl) = client.member_fetch_all(&SERVER).await {
             panic!("{:#?}", curl);
         }
     }
 
     #[tokio::test]
     async fn test_ban_mkrm() {
-        let http = tester_bot().await;
+        let client = tester_bot();
 
         // ban user
-        let banreason = DataBanReason {
-            reason: Some(String::from("bot test")),
-        };
-        if let Err(curl) = server::ban::create(&http, SERVER, USER, banreason).await {
+        let banreason = DataBanReason::none();
+        if let Err(curl) = client.ban_create(&SERVER, &USER, &banreason).await {
             panic!("ban user {:#?}", curl);
         }
 
-        if let Err(curl) = server::ban::remove(&http, SERVER, USER).await {
+        if let Err(curl) = client.ban_remove(&SERVER, &USER).await {
             panic!("remove banned user {:#?}", curl);
         }
     }
 
     #[tokio::test]
     async fn test_ban_list() {
-        let http = tester_bot().await;
+        let client = tester_bot();
 
-        if let Err(curl) = server::ban::list(&http, SERVER).await {
+        if let Err(curl) = client.ban_list(SERVER).await {
             panic!("list banned users {:#?}", curl);
         }
     }
     #[tokio::test]
     async fn test_channel_create() {
-        let http = tester_bot().await;
+        let client = tester_bot();
 
         let create_chan = DataChannelCreate::new("womp");
 
-        if let Err(curl) = server::channel::create(&http, SERVER, create_chan).await {
+        if let Err(curl) = client.channel_create(&SERVER, &create_chan).await {
             panic!("{:#?}", curl);
         }
     }
 
     #[tokio::test]
     async fn test_permission_set_default() {
-        let http = tester_bot().await;
+        let client = tester_bot();
         let data = Permissions::default()
             .add_allow(Permission::ViewChannel)
             .add_allow(Permission::KickMembers)
             .export();
 
-        if let Err(error) = permissions::server::set_default(&http, SERVER, data).await {
+        if let Err(error) = client.server_permission_set_default(&SERVER, &data).await {
             panic!("{:#?}", error);
         }
     }
 
     #[tokio::test]
     async fn test_fetch_invites() {
-        let http = tester_bot().await;
+        let client = tester_bot();
 
-        if let Err(error) = server::invites::fetch(&http, SERVER).await {
+        if let Err(error) = client.invites_fetch(&SERVER).await {
             panic!("{:#?}", error);
         }
     }
     #[tokio::test]
     async fn test_permission_set() {
-        let http = tester_bot().await;
+        let client = tester_bot();
 
         let perms = Permissions::default()
             .add_allow(Permission::ViewChannel)
             .add_allow(Permission::KickMembers)
             .export();
 
-        if let Err(error) = permissions::server::set(&http, SERVER, ROLE, perms).await {
+        if let Err(error) = client.server_permission_set(&SERVER, &ROLE, &perms).await {
             panic!("{:#?}", error);
         }
     }
 
     #[tokio::test]
     async fn test_role_create() {
-        let http = tester_bot().await;
+        let client = tester_bot();
 
         let data = DataRoleCreate::new("dummyrole");
 
-        if let Err(error) = server::role::create(&http, SERVER, data).await {
+        if let Err(error) = client.roles_create(&SERVER, &data).await {
             panic!("{:#?}", error);
         }
     }
 
     #[tokio::test]
     async fn test_role_delete() {
-        let http = tester_bot().await;
+        let client = tester_bot();
 
-        if let Err(error) = server::role::delete(&http, SERVER, "01GXG24BV8QMSFWXKFRHZV30AY").await
+        if let Err(error) = client
+            .roles_delete(&SERVER, "01GXG24BV8QMSFWXKFRHZV30AY")
+            .await
         {
             panic!("{:#?}", error);
         }
@@ -142,11 +141,11 @@ mod tests {
 
     #[tokio::test]
     async fn test_roles_edit() {
-        let http = tester_bot().await;
+        let client = tester_bot();
 
         let data = DataEditRole::new();
 
-        if let Err(error) = server::role::edit(&http, SERVER, ROLE, data).await {
+        if let Err(error) = client.roles_edit(&SERVER, &ROLE, &data).await {
             panic!("{:#?}", error);
         }
     }
@@ -154,30 +153,30 @@ mod tests {
     // todo unresolved issue
     #[tokio::test]
     async fn test_server_create() {
-        let http = tester_bot().await;
+        let client = tester_bot();
 
         let data = DataCreateServer::new("DummyServer");
 
-        if let Err(error) = server::create(&http, data).await {
+        if let Err(error) = client.server_create(&data).await {
             panic!("{:#?}", error);
         }
     }
 
     #[tokio::test]
     async fn test_server_edit() {
-        let http = tester_bot().await;
+        let client = tester_bot();
         let data = DataEditServer::new();
 
-        if let Err(error) = server::edit(&http, SERVER, data).await {
+        if let Err(error) = client.server_edit(&SERVER, &data).await {
             panic!("{:#?}", error);
         }
     }
 
     #[tokio::test]
     async fn test_server_fetch() {
-        let http = tester_bot().await;
+        let client = tester_bot();
 
-        if let Err(error) = server::fetch(&http, SERVER).await {
+        if let Err(error) = client.server_fetch(&SERVER).await {
             panic!("{:#?}", error);
         }
     }
@@ -185,51 +184,19 @@ mod tests {
     // todo untested
     #[tokio::test]
     async fn test_server_ack() {
-        let http = tester_bot().await;
+        let client = tester_user();
 
-        if let Err(error) = server::ack(&http, SERVER).await {
+        if let Err(error) = client.server_ack(&SERVER).await {
             panic!("{:#?}", error);
         }
     }
 
     #[tokio::test]
     async fn test_server_delete() {
-        let http = tester_bot().await;
+        let client = tester_bot();
 
-        if let Err(error) = server::delete(&http, SERVER).await {
+        if let Err(error) = client.server_delete(&SERVER).await {
             panic!("{:#?}", error);
         }
     }
-
 }
-
-// DO NOT REMOVE - TEMPLATE
-//
-//
-//
-//
-//
-//
-//
-// TEMPLATE
-/*
-
-
-
-
- #[tokio::test]
-    async fn test_template() {
-        let http = tester().await;
-
-        if let Err(error) =
-            template(&http, SERVER).await
-        {
-            panic!("{:#?}", error);
-        }
-    }
-
-
-
-
-
-*/

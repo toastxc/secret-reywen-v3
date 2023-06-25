@@ -26,6 +26,7 @@ mod tests {
         let client = tester_user();
 
         if let Err(error) = client.fetch_mutual(&USER).await {
+
             panic!("{:#?}", error);
         }
     }
@@ -116,6 +117,7 @@ mod tests {
         let client = tester_user();
 
         if let Err(error) = client.friend_request_reject(&USER).await {
+
             panic!("{:#?}", error);
         }
     }

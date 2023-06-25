@@ -9,4 +9,5 @@
 **/*.rs.bk
 
 # token for testing
-src/tests/*token.txt
+src/tests/bot-token.txt
+src/tests/self-token.txt

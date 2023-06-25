@@ -22,6 +22,11 @@
             "cargoArgs": ["fmt"],
         },
         
+        {
+            "type": "cargo",
+            "name": "clippy",
+            "cargoArgs": ["clippy"],
+        },
         
     ]
 }

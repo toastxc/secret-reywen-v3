@@ -155,7 +155,9 @@ impl Message {
         if let Some(content) = self.content.as_ref() {
             let split_content = content.split(split_by).collect::<Vec<&str>>();
             let mut new = Vec::new();
-            split_content.iter().for_each(|item| new.push(item.to_string()));
+            split_content
+                .iter()
+                .for_each(|item| new.push(item.to_string()));
 
             if split_content.contains(&search) {
                 return Some(new);

@@ -120,15 +120,12 @@ dependencies = [
 ]
 
 [[package]]
-<<<<<<< HEAD
 name = "equivalent"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "88bffebc5d80432c9b140ee17875ff173a8ab62faad5b257da912bd2f6c1c0a1"
 
 [[package]]
-=======
->>>>>>> main
 name = "errno"
 version = "0.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -769,41 +766,7 @@ dependencies = [
 
 [[package]]
 name = "reywen_http"
-<<<<<<< HEAD
 version = "0.1.9"
-=======
-version = "0.1.6"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5f1d7ebf5567a1627e829916cd7deba15de92350a73631e94f00ff9367e55b7d"
-dependencies = [
- "hyper",
- "hyper-rustls",
- "hyper-timeout",
- "hyper-tls",
- "serde",
- "serde_json",
- "tokio",
-]
-
-[[package]]
-name = "ring"
-version = "0.16.20"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3053cf52e236a3ed746dfc745aa9cacf1b791d846bdaf412f60a8d7d6e17c8fc"
-dependencies = [
- "cc",
- "libc",
- "once_cell",
- "spin",
- "untrusted",
- "web-sys",
- "winapi",
-]
-
-[[package]]
-name = "rustix"
-version = "0.37.19"
->>>>>>> main
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "14cbd4e5d605398b44d8a9f15fda5ffe1b9a3fbe1ecc56ca2d5ea0804576d420"
 dependencies = [
@@ -847,15 +810,9 @@ dependencies = [
 
 [[package]]
 name = "rustls"
-<<<<<<< HEAD
 version = "0.21.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e32ca28af694bc1bbf399c33a516dbdf1c90090b8ab23c2bc24f834aa2247f5f"
-=======
-version = "0.21.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c911ba11bc8433e811ce56fde130ccf32f5127cab0e0194e9c68c5a5b671791e"
->>>>>>> main
 dependencies = [
  "log",
  "ring",
@@ -865,15 +822,9 @@ dependencies = [
 
 [[package]]
 name = "rustls-native-certs"
-<<<<<<< HEAD
 version = "0.6.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a9aace74cb666635c918e9c12bc0d348266037aa8eb599b5cba565709a8dff00"
-=======
-version = "0.6.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0167bac7a9f490495f3c33013e7722b53cb087ecbe082fb0c6387c96f634ea50"
->>>>>>> main
 dependencies = [
  "openssl-probe",
  "rustls-pemfile",
@@ -1033,15 +984,6 @@ dependencies = [
 [[package]]
 name = "spin"
 version = "0.5.2"
-<<<<<<< HEAD
-=======
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6e63cff320ae2c57904679ba7cb63280a3dc4613885beafb148ee7bf9aa9042d"
-
-[[package]]
-name = "syn"
-version = "2.0.18"
->>>>>>> main
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6e63cff320ae2c57904679ba7cb63280a3dc4613885beafb148ee7bf9aa9042d"
 
@@ -1182,15 +1124,9 @@ dependencies = [
 
 [[package]]
 name = "tokio-rustls"
-<<<<<<< HEAD
 version = "0.24.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c28327cf380ac148141087fbfb9de9d7bd4e84ab5d2c28fbc911d753de8a7081"
-=======
-version = "0.24.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e0d409377ff5b1e3ca6437aa86c1eb7d40c134bfec254e44c830defa92669db5"
->>>>>>> main
 dependencies = [
  "rustls",
  "tokio",
@@ -1309,15 +1245,6 @@ dependencies = [
 [[package]]
 name = "untrusted"
 version = "0.7.1"
-<<<<<<< HEAD
-=======
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a156c684c91ea7d62626509bce3cb4e1d9ed5c4d978f7b4352658f96a4c26b4a"
-
-[[package]]
-name = "url"
-version = "2.3.1"
->>>>>>> main
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a156c684c91ea7d62626509bce3cb4e1d9ed5c4d978f7b4352658f96a4c26b4a"
 
